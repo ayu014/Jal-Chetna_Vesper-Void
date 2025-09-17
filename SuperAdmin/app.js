@@ -211,7 +211,7 @@ function handleLogout() {
     window.location.replace('index.html');
 }
 
-// Handle create user
+// Handle create user - MATCHES YOUR DATABASE SCHEMA
 async function handleCreateUser() {
     console.log('Handling create user...');
     
@@ -223,36 +223,34 @@ async function handleCreateUser() {
         formMessage.className = 'form-message';
     }
 
-    // Get form values
+    // Get form values - MATCHES YOUR DATABASE SCHEMA EXACTLY
     const userData = {
-        full_name: document.getElementById('fullName').value.trim(),
-        email: document.getElementById('email').value.trim(),
-        phone_number: document.getElementById('phoneNumber').value.trim(),
-        assigned_location: document.getElementById('assignedLocation').value.trim(),
-        designation: document.getElementById('designation').value,
-        password: document.getElementById('userPassword').value.trim()
+        first_name: document.getElementById('firstName').value.trim(),
+        last_name: document.getElementById('lastName').value.trim(),
+        username: document.getElementById('userUsername').value.trim(),
+        password: document.getElementById('userPassword').value.trim(),
+        designation: document.getElementById('designation').value
     };
 
     console.log('User data:', { ...userData, password: '***' });
 
     // Basic validation
-    if (!userData.full_name || !userData.email || !userData.phone_number || 
-        !userData.assigned_location || !userData.designation || !userData.password) {
+    if (!userData.first_name || !userData.last_name || !userData.username || 
+        !userData.password || !userData.designation) {
         showMessage('Please fill in all fields.', 'error');
         return;
     }
 
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(userData.email)) {
-        showMessage('Please enter a valid email address.', 'error');
+    // Username validation (no spaces, special characters)
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    if (!usernameRegex.test(userData.username)) {
+        showMessage('Username can only contain letters, numbers, and underscores.', 'error');
         return;
     }
 
-    // Phone validation (basic)
-    const phoneRegex = /^[\d\s\-\+\(\)]+$/;
-    if (!phoneRegex.test(userData.phone_number)) {
-        showMessage('Please enter a valid phone number.', 'error');
+    // Password validation (minimum 6 characters)
+    if (userData.password.length < 6) {
+        showMessage('Password must be at least 6 characters long.', 'error');
         return;
     }
 
@@ -264,9 +262,9 @@ async function handleCreateUser() {
             throw new Error('Supabase client not initialized');
         }
 
-        // Insert user into Supabase
+        // Insert user into Supabase using your exact table structure
         const { data, error } = await supabaseClient
-            .from('user_profiles')
+            .from('user_profiles')  // Your table name from the image
             .insert([userData]);
 
         if (error) {
@@ -274,7 +272,7 @@ async function handleCreateUser() {
             
             // Handle specific error cases
             if (error.code === '23505') {
-                showMessage('Error: A user with this email already exists.', 'error');
+                showMessage('Error: A user with this username already exists.', 'error');
             } else {
                 showMessage(`Error: ${error.message}`, 'error');
             }
@@ -331,10 +329,6 @@ function testButtons() {
     
     console.log('Login button found:', !!loginBtn);
     console.log('Logout button found:', !!logoutBtn);
-    
-    if (loginBtn) {
-        console.log('Login button click listener count:', getEventListeners(loginBtn));
-    }
 }
 
 // Run test after a short delay

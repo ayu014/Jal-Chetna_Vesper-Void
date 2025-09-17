@@ -24,27 +24,20 @@
                 <form id="createUserForm" class="user-form">
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="fullName">Full Name:</label>
-                            <input type="text" id="fullName" name="fullName" required>
+                            <label for="firstName">First Name:</label>
+                            <input type="text" id="firstName" name="firstName" required>
                         </div>
                         <div class="form-group">
-                            <label for="email">Email:</label>
-                            <input type="email" id="email" name="email" required>
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" id="lastName" name="lastName" required>
                         </div>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label for="phoneNumber">Phone Number:</label>
-                            <input type="text" id="phoneNumber" name="phoneNumber" required>
+                            <label for="userUsername">Username:</label>
+                            <input type="text" id="userUsername" name="userUsername" required>
                         </div>
-                        <div class="form-group">
-                            <label for="assignedLocation">Assigned Location:</label>
-                            <input type="text" id="assignedLocation" name="assignedLocation" placeholder="e.g., Jalandhar District, Punjab State" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
                         <div class="form-group">
                             <label for="designation">Designation:</label>
                             <select id="designation" name="designation" required>
@@ -55,7 +48,10 @@
                                 <option value="City Level">City Level</option>
                             </select>
                         </div>
-                        <div class="form-group">
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group full-width">
                             <label for="userPassword">Set Password:</label>
                             <input type="password" id="userPassword" name="userPassword" required>
                         </div>
