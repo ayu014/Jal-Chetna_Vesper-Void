@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jal Chetna - Super Admin Panel</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="header-container">
+            <h1>Jal Chetna - Super Admin Panel</h1>
+            <button id="logoutBtn" class="logout-btn">Logout</button>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <div class="form-section">
+                <h2>Create New User Profile</h2>
+                <form id="createUserForm" class="user-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name:</label>
+                            <input type="text" id="fullName" name="fullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number:</label>
+                            <input type="text" id="phoneNumber" name="phoneNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="assignedLocation">Assigned Location:</label>
+                            <input type="text" id="assignedLocation" name="assignedLocation" placeholder="e.g., Jalandhar District, Punjab State" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="designation">Designation:</label>
+                            <select id="designation" name="designation" required>
+                                <option value="">Select Designation</option>
+                                <option value="District Level">District Level</option>
+                                <option value="State Level">State Level</option>
+                                <option value="Block Level">Block Level</option>
+                                <option value="City Level">City Level</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="userPassword">Set Password:</label>
+                            <input type="password" id="userPassword" name="userPassword" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Create User</button>
+                    <p id="formMessage" class="form-message"></p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
