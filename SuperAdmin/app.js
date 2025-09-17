@@ -1,46 +1,77 @@
-// Global variables
-let supabaseClient = null;
+// ==========================================
+// 🔧 SUPABASE CONFIGURATION
+// ==========================================
+// Replace with your actual Supabase credentials
+// This is for JavaScript web applications
+const SUPABASE_URL = 'https://hihobitpqkbxkefvpgbk.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpaG9iaXRwcWtieGtlZnZwZ2JrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgwNDk3MjQsImV4cCI6MjA3MzYyNTcyNH0.1_fLA-mq4McZgW3IzyDdbe6tVjdi80TKslyjMF02DBE';
 
 // Initialize Supabase client
+let supabaseClient = null;
+
 function initializeSupabase() {
-    const supabaseUrl = 'YOUR_SUPABASE_URL';
-    const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
-    
-    // Check if supabase is available
-    if (typeof supabase !== 'undefined') {
-        supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
-        console.log('Supabase initialized successfully');
-    } else {
-        console.error('Supabase library not loaded');
+    try {
+        if (typeof supabase !== 'undefined') {
+            supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            console.log('✅ Supabase initialized successfully');
+            testDatabaseConnection();
+        } else {
+            console.error('❌ Supabase library not loaded');
+        }
+    } catch (error) {
+        console.error('❌ Failed to initialize Supabase:', error);
     }
 }
 
-// Check if we're on the dashboard page and protect it
+// Test database connection
+async function testDatabaseConnection() {
+    try {
+        const { data, error } = await supabaseClient
+            .from('admin_login_details')
+            .select('count', { count: 'exact' });
+        
+        if (error) throw error;
+        console.log('✅ Database connected! Current records:', data || 0);
+    } catch (error) {
+        console.error('❌ Database connection test failed:', error.message);
+        if (error.message.includes('relation "user_profiles" does not exist')) {
+            console.warn('⚠️ Please create the user_profiles table in Supabase');
+        }
+    }
+}
+
+// ==========================================
+// 🔐 AUTHENTICATION & PAGE PROTECTION
+// ==========================================
 function protectDashboard() {
     if (window.location.pathname.includes('dashboard.html')) {
         const isLoggedIn = sessionStorage.getItem('isSuperAdminLoggedIn');
         if (isLoggedIn !== 'true') {
-            console.log('User not authenticated, redirecting to index.html');
+            console.log('🚫 User not authenticated, redirecting...');
             window.location.replace('index.html');
         }
     }
 }
 
-// Initialize everything when DOM is loaded
+// ==========================================
+// 🎯 MAIN APPLICATION INITIALIZATION
+// ==========================================
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded');
+    console.log('🚀 Jal Chetna Admin Dashboard starting...');
     
     // Initialize Supabase
     initializeSupabase();
     
-    // Protect dashboard if needed
+    // Protect dashboard page
     protectDashboard();
     
-    // Set up event listeners based on current page
+    // Setup all event listeners
     setupEventListeners();
 });
 
-// Setup event listeners
+// ==========================================
+// 📝 EVENT LISTENERS SETUP
+// ==========================================
 function setupEventListeners() {
     // Login page elements
     const loginBtn = document.getElementById('loginBtn');
@@ -52,12 +83,10 @@ function setupEventListeners() {
     const logoutBtn = document.getElementById('logoutBtn');
     const createUserForm = document.getElementById('createUserForm');
 
-    // Login modal functionality
+    // Login functionality
     if (loginBtn) {
-        console.log('Setting up login button event listener');
         loginBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Login button clicked');
             showLoginModal();
         });
     }
@@ -65,7 +94,6 @@ function setupEventListeners() {
     if (closeBtn) {
         closeBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Close button clicked');
             hideLoginModal();
         });
     }
@@ -73,7 +101,6 @@ function setupEventListeners() {
     if (loginModal) {
         loginModal.addEventListener('click', function(e) {
             if (e.target === loginModal) {
-                console.log('Modal overlay clicked');
                 hideLoginModal();
             }
         });
@@ -82,7 +109,6 @@ function setupEventListeners() {
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('Login form submitted');
             handleLogin();
         });
     }
@@ -91,7 +117,6 @@ function setupEventListeners() {
     if (logoutBtn) {
         logoutBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Logout button clicked');
             handleLogout();
         });
     }
@@ -99,12 +124,11 @@ function setupEventListeners() {
     if (createUserForm) {
         createUserForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            console.log('Create user form submitted');
-            handleCreateUser();
+            handleCreateUser(); // 🎯 This saves to database
         });
     }
 
-    // Keyboard events
+    // Keyboard shortcuts
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && loginModal && loginModal.classList.contains('show')) {
             hideLoginModal();
@@ -112,90 +136,61 @@ function setupEventListeners() {
     });
 }
 
-// Show login modal
+// ==========================================
+// 🔑 LOGIN/LOGOUT FUNCTIONS
+// ==========================================
 function showLoginModal() {
     const loginModal = document.getElementById('loginModal');
     if (loginModal) {
-        console.log('Showing login modal');
         loginModal.classList.add('show');
-        
-        // Focus on username field
         setTimeout(() => {
             const usernameField = document.getElementById('username');
-            if (usernameField) {
-                usernameField.focus();
-            }
+            if (usernameField) usernameField.focus();
         }, 100);
     }
 }
 
-// Hide login modal
 function hideLoginModal() {
     const loginModal = document.getElementById('loginModal');
     if (loginModal) {
-        console.log('Hiding login modal');
         loginModal.classList.remove('show');
         clearLoginForm();
     }
 }
 
-// Clear login form
 function clearLoginForm() {
     const loginForm = document.getElementById('loginForm');
     const loginError = document.getElementById('loginError');
     
-    if (loginForm) {
-        loginForm.reset();
-    }
-    
-    if (loginError) {
-        loginError.textContent = '';
-    }
+    if (loginForm) loginForm.reset();
+    if (loginError) loginError.textContent = '';
 }
 
-// Handle login
 function handleLogin() {
-    console.log('Handling login...');
-    
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value.trim();
     const loginError = document.getElementById('loginError');
 
-    // Clear previous errors
-    if (loginError) {
-        loginError.textContent = '';
-    }
+    if (loginError) loginError.textContent = '';
 
-    console.log('Username:', username);
-    console.log('Password:', password ? '***' : 'empty');
-
-    // Validate credentials
     if (username === 'superadmin' && password === 'admin') {
-        console.log('Login successful');
-        
-        // Set session flag
         sessionStorage.setItem('isSuperAdminLoggedIn', 'true');
         
-        // Show success message briefly
         if (loginError) {
             loginError.style.color = 'green';
             loginError.textContent = 'Login successful! Redirecting...';
         }
         
-        // Redirect to dashboard after a short delay
         setTimeout(() => {
+            hideLoginModal();
             window.location.href = 'dashboard.html';
         }, 1000);
         
     } else {
-        console.log('Login failed');
-        
-        // Show error message
         if (loginError) {
             loginError.textContent = 'Invalid username or password. Please try again.';
         }
         
-        // Clear password field
         const passwordField = document.getElementById('password');
         if (passwordField) {
             passwordField.value = '';
@@ -204,16 +199,16 @@ function handleLogin() {
     }
 }
 
-// Handle logout
 function handleLogout() {
-    console.log('Handling logout...');
     sessionStorage.removeItem('isSuperAdminLoggedIn');
     window.location.replace('index.html');
 }
 
-// Handle create user - MATCHES YOUR DATABASE SCHEMA
+// ==========================================
+// 💾 DATABASE SAVE FUNCTION - MAIN FEATURE
+// ==========================================
 async function handleCreateUser() {
-    console.log('Handling create user...');
+    console.log('📝 Starting user creation process...');
     
     const formMessage = document.getElementById('formMessage');
     
@@ -223,7 +218,7 @@ async function handleCreateUser() {
         formMessage.className = 'form-message';
     }
 
-    // Get form values - MATCHES YOUR DATABASE SCHEMA EXACTLY
+    // Collect form data matching your database schema
     const userData = {
         first_name: document.getElementById('firstName').value.trim(),
         last_name: document.getElementById('lastName').value.trim(),
@@ -232,69 +227,108 @@ async function handleCreateUser() {
         designation: document.getElementById('designation').value
     };
 
-    console.log('User data:', { ...userData, password: '***' });
+    console.log('📋 Form data collected:', { ...userData, password: '[HIDDEN]' });
 
-    // Basic validation
-    if (!userData.first_name || !userData.last_name || !userData.username || 
-        !userData.password || !userData.designation) {
-        showMessage('Please fill in all fields.', 'error');
-        return;
+    // Client-side validation
+    if (!validateUserData(userData)) {
+        return; // Validation errors already shown
     }
 
-    // Username validation (no spaces, special characters)
-    const usernameRegex = /^[a-zA-Z0-9_]+$/;
-    if (!usernameRegex.test(userData.username)) {
-        showMessage('Username can only contain letters, numbers, and underscores.', 'error');
-        return;
-    }
-
-    // Password validation (minimum 6 characters)
-    if (userData.password.length < 6) {
-        showMessage('Password must be at least 6 characters long.', 'error');
-        return;
-    }
-
-    // Show loading message
+    // Show loading state
     showMessage('Creating user profile...', 'info');
 
     try {
+        // Check if Supabase is properly initialized
         if (!supabaseClient) {
-            throw new Error('Supabase client not initialized');
+            throw new Error('Supabase client not initialized. Please check your configuration.');
         }
 
-        // Insert user into Supabase using your exact table structure
+        // 🚀 SAVE TO DATABASE - This is where the magic happens
         const { data, error } = await supabaseClient
-            .from('user_profiles')  // Your table name from the image
-            .insert([userData]);
+            .from('admin_login_details')
+            .insert([userData])
+            .select(); // Returns the inserted data
 
         if (error) {
-            console.error('Supabase error:', error);
+            console.error('❌ Database error:', error);
+            handleDatabaseError(error);
+        } else {
+            console.log('✅ User created successfully:', data);
             
-            // Handle specific error cases
-            if (error.code === '23505') {
-                showMessage('Error: A user with this username already exists.', 'error');
-            } else {
-                showMessage(`Error: ${error.message}`, 'error');
-            }
-        } else {
-            console.log('User created successfully:', data);
-            showMessage('User profile created successfully!', 'success');
+            // Show success message with user ID
+            const newUserId = data[0]?.id || 'Unknown';
+            showMessage(`✅ Success! User "${userData.username}" created with ID: ${newUserId}`, 'success');
+            
+            // Clear the form
             clearUserForm();
+            
+            // Log success for debugging
+            console.log('💾 Data successfully saved to database:', data[0]);
         }
+
     } catch (error) {
-        console.error('Unexpected error:', error);
+        console.error('❌ Unexpected error during user creation:', error);
         
-        // If Supabase is not configured, show demo message
-        if (error.message.includes('Supabase client not initialized')) {
-            showMessage('Demo Mode: User profile would be created (Supabase not configured)', 'success');
-            clearUserForm();
+        if (error.message.includes('fetch')) {
+            showMessage('❌ Network Error: Please check your internet connection and Supabase configuration.', 'error');
+        } else if (error.message.includes('Supabase client not initialized')) {
+            showMessage('❌ Configuration Error: Supabase not properly configured.', 'error');
         } else {
-            showMessage('An unexpected error occurred. Please try again.', 'error');
+            showMessage('❌ An unexpected error occurred. Please check the console for details.', 'error');
         }
     }
 }
 
-// Show message function
+// ==========================================
+// 🔍 VALIDATION FUNCTIONS
+// ==========================================
+function validateUserData(userData) {
+    // Check for empty fields
+    if (!userData.first_name || !userData.last_name || !userData.username || 
+        !userData.password || !userData.designation) {
+        showMessage('❌ Please fill in all fields.', 'error');
+        return false;
+    }
+
+    // Username validation (only letters, numbers, underscores)
+    const usernameRegex = /^[a-zA-Z0-9_]+$/;
+    if (!usernameRegex.test(userData.username)) {
+        showMessage('❌ Username can only contain letters, numbers, and underscores.', 'error');
+        return false;
+    }
+
+    // Password length validation
+    if (userData.password.length < 6) {
+        showMessage('❌ Password must be at least 6 characters long.', 'error');
+        return false;
+    }
+
+    // Name validation (only letters and spaces)
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    if (!nameRegex.test(userData.first_name) || !nameRegex.test(userData.last_name)) {
+        showMessage('❌ Names can only contain letters and spaces.', 'error');
+        return false;
+    }
+
+    return true;
+}
+
+// ==========================================
+// 🎨 UI HELPER FUNCTIONS
+// ==========================================
+function handleDatabaseError(error) {
+    if (error.code === '23505') {
+        // Unique constraint violation (duplicate username)
+        showMessage('❌ Error: Username already exists. Please choose a different username.', 'error');
+    } else if (error.message.includes('relation "user_profiles" does not exist')) {
+        showMessage('❌ Database Error: Table "user_profiles" not found. Please create the table in Supabase.', 'error');
+    } else if (error.message.includes('permission denied')) {
+        showMessage('❌ Permission Error: Please check your database policies in Supabase.', 'error');
+    } else {
+        showMessage(`❌ Database Error: ${error.message}`, 'error');
+    }
+}
+
 function showMessage(message, type) {
     const formMessage = document.getElementById('formMessage');
     if (formMessage) {
@@ -311,7 +345,6 @@ function showMessage(message, type) {
     }
 }
 
-// Clear user form
 function clearUserForm() {
     const form = document.getElementById('createUserForm');
     if (form) {
@@ -319,17 +352,22 @@ function clearUserForm() {
     }
 }
 
-// Add some debugging
-console.log('app.js loaded successfully');
-
-// Test function to verify everything is working
+// ==========================================
+// 🧪 DEBUGGING & TESTING FUNCTIONS
+// ==========================================
 function testButtons() {
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
+    const createBtn = document.getElementById('createUserForm');
     
-    console.log('Login button found:', !!loginBtn);
-    console.log('Logout button found:', !!logoutBtn);
+    console.log('🔍 Button Status Check:');
+    console.log('- Login button found:', !!loginBtn);
+    console.log('- Logout button found:', !!logoutBtn);
+    console.log('- Create form found:', !!createBtn);
+    console.log('- Supabase client initialized:', !!supabaseClient);
 }
 
-// Run test after a short delay
-setTimeout(testButtons, 1000);
+// Run diagnostics after page load
+setTimeout(testButtons, 2000);
+
+console.log('📱 Jal Chetna Admin Dashboard loaded successfully');
