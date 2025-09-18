@@ -62,11 +62,12 @@ const WelcomeScreen = ({ navigation }) => {
               icon="map-legend"
               onPress={() => navigation.navigate('Dashboard')} 
             />
-            <MenuButton 
-              title="Alerts" 
-              icon="bell-outline"
-              onPress={handleNotImplemented} 
+           <MenuButton 
+            title="Alerts" 
+            icon="bell-outline"
+            onPress={() => navigation.navigate('Alerts')} 
             />
+
           </View>
           <View style={styles.gridRow}>
             <MenuButton 
