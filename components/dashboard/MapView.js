@@ -1,31 +1,56 @@
 import React from 'react';
-import { StyleSheet, Alert } from 'react-native'; // 1. Import Alert
+import { StyleSheet, View, Text, Alert } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import { COLORS } from '../../constants/colors';
 
+// CHANGED: This function now returns a hex color with 50% transparency
 const getHgiColor = (status) => {
+  const transparency = '80'; // '80' is the hex code for ~50% opacity
   switch (status) {
-    case 'Red': return COLORS.red;
-    case 'Yellow': return COLORS.yellow;
-    case 'Green': return COLORS.green;
-    default: return COLORS.gray;
+    case 'Red': return COLORS.red + transparency;
+    case 'Yellow': return COLORS.yellow + transparency;
+    case 'Green': return COLORS.green + transparency;
+    default: return COLORS.gray + transparency;
   }
 };
 
-const MapViewComponent = ({ stationsToDisplay }) => {
+const MapViewComponent = ({ stationsToDisplay, allStations }) => {
   if (!Array.isArray(stationsToDisplay)) {
     return null; 
   }
 
-  // 2. Create a function to handle the marker press
-  const handleMarkerPress = (station) => {
-    Alert.alert(
-      station.name, // The title of the alert
-      `ID: ${station.id}\nStatus: ${station.hgi_status}`, // The message of the alert
-      [
-        { text: 'OK' } // The button to dismiss the alert
-      ]
+  // The 'handleMarkerPress' function for the alert menu is unchanged
+  const handleMarkerPress = (tappedStation) => {
+    const overlappingStations = allStations.filter(
+      (s) =>
+        s.coordinate.latitude === tappedStation.coordinate.latitude &&
+        s.coordinate.longitude === tappedStation.coordinate.longitude
     );
+
+    if (overlappingStations.length === 1) {
+      Alert.alert(
+        tappedStation.name,
+        `ID: ${tappedStation.id}\nStatus: ${tappedStation.hgi_status}`
+      );
+    } else {
+      const alertButtons = overlappingStations.map((station) => ({
+        text: station.name,
+        onPress: () => {
+          Alert.alert(
+            station.name,
+            `ID: ${station.id}\nStatus: ${station.hgi_status}\nWater Level: ${station.waterLevel}m`
+          );
+        },
+      }));
+
+      alertButtons.push({ text: 'Cancel', style: 'cancel' });
+
+      Alert.alert(
+        'Multiple Stations',
+        'Please select a station to view its details:',
+        alertButtons
+      );
+    }
   };
 
   return (
@@ -43,14 +68,16 @@ const MapViewComponent = ({ stationsToDisplay }) => {
           return null;
         }
         return (
+          // --- THE MARKER HAS BEEN MODIFIED HERE ---
           <Marker
             key={station.id}
             coordinate={station.coordinate}
-            pinColor={getHgiColor(station.hgi_status)}
-            title={station.name}
-            // 3. Add the onPress prop to trigger our new function
             onPress={() => handleMarkerPress(station)}
-          />
+            // The 'pinColor' prop has been removed
+          >
+            {/* This View is our new semi-transparent circle marker */}
+            <View style={[styles.markerCircle, { backgroundColor: getHgiColor(station.hgi_status) }]} />
+          </Marker>
         );
       })}
     </MapView>
@@ -59,6 +86,14 @@ const MapViewComponent = ({ stationsToDisplay }) => {
 
 const styles = StyleSheet.create({
   map: { ...StyleSheet.absoluteFillObject },
+  // NEW: Style for the custom circle marker
+  markerCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12, // This makes the view a circle
+    borderWidth: 3,
+    borderColor: 'rgba(255, 255, 255, 1)', // A semi-transparent white border for definition
+  },
 });
 
 export default MapViewComponent;

@@ -1,46 +1,57 @@
-// Sample DWLR station data for the Jalandhar area
+// DWLR station data for Sangrur area
 export const stations = [
   {
-    id: 'JLN001',
-    name: 'DWLR Station - Nurmahal',
-    coordinate: { latitude: 31.0991, longitude: 75.5908 },
+    id: 'CGWBHR78',
+    name: 'DWLR Station - SUNAM',
+    coordinate: { latitude: 30.4808, longitude: 75.9364 },
     hgi_status: 'Red', // Critical
   },
   {
-    id: 'JLN002',
-    name: 'DWLR Station - Phillaur',
-    coordinate: { latitude: 31.0254, longitude: 75.7874 },
+    id: 'CGWBHR79',
+    name: 'DWLR Station - SUNAM',
+    coordinate: { latitude: 30.4808, longitude: 75.9364 },
+    hgi_status: 'Orange', // Over-exploited
+  },
+  {
+    id: 'CGWBHR102',
+    name: 'DWLR Station - -',
+    coordinate: { latitude: 29.8444, longitude: 75.9389 },
+    hgi_status: 'Green', // Safe
+  },
+  {
+    id: 'CGWBPB170',
+    name: 'DWLR Station - DHURI',
+    coordinate: { latitude: 30.4808, longitude: 75.9364 },
+    hgi_status: 'Orange', // Over-exploited
+  },
+  {
+    id: 'CGWBPB172',
+    name: 'DWLR Station - DHURI',
+    coordinate: { latitude: 30.4808, longitude: 75.9364 },
+    hgi_status: 'Yellow', // Stressed
+  },
+  {
+    id: 'CGWBHR104',
+    name: 'DWLR Station - MOONAK',
+    coordinate: { latitude: 29.8444, longitude: 75.9389 },
+    hgi_status: 'Yellow', // Stressed
+  },
+  {
+    id: 'CGWBPB179',
+    name: 'DWLR Station - -',
+    coordinate: { latitude: 30.2092, longitude: 75.8631 },
+    hgi_status: 'Yellow', // Stressed
+  },
+  {
+    id: 'CGWBPB168',
+    name: 'DWLR Station - Bhojowali-Pz',
+    coordinate: { latitude: 30.8092, longitude: 76.845 },
+    hgi_status: 'Orange', // Over-exploited
+  },
+  {
+    id: 'CGWBPB169',
+    name: 'DWLR Station - Ghanauri Kalan-Pz',
+    coordinate: { latitude: 30.4808, longitude: 75.9364 },
     hgi_status: 'Red', // Critical
-  },
-  {
-    id: 'JLN003',
-    name: 'DWLR Station - Shahkot',
-    coordinate: { latitude: 31.0772, longitude: 75.3407 },
-    hgi_status: 'Yellow', // Over-exploited
-  },
-  {
-    id: 'JLN004',
-    name: 'DWLR Station - Adampur',
-    coordinate: { latitude: 31.4314, longitude: 75.7226 },
-    hgi_status: 'Green', // Safe
-  },
-  {
-    id: 'JLN005',
-    name: 'DWLR Station - Nakodar',
-    coordinate: { latitude: 31.1257, longitude: 75.4746 },
-    hgi_status: 'Yellow', // Over-exploited
-  },
-  {
-    id: 'JLN006',
-    name: 'Central Jalandhar Monitor',
-    coordinate: { latitude: 31.3260, longitude: 75.5762 },
-    hgi_status: 'Green', // Safe
-  },
-  // Add more stations to see clustering in action
-  {
-    id: 'JLN007',
-    name: 'Goraya Monitoring Well',
-    coordinate: { latitude: 31.1293, longitude: 75.7725 },
-    hgi_status: 'Red',
   },
 ];
