@@ -91,8 +91,8 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12, // This makes the view a circle
-    borderWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 1)', // A semi-transparent white border for definition
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)', // A semi-transparent white border for definition
   },
 });
 

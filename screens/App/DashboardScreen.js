@@ -49,16 +49,45 @@ const DashboardScreen = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    // ... search logic is unchanged
+    if (searchQuery.trim() === '') {
+      setFilteredStations(allStations);
+    } else {
+      const result = allStations.filter(station =>
+        station.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        String(station.id).toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredStations(result);
+    }
   }, [searchQuery, allStations]);
 
   useLayoutEffect(() => {
-    // ... header logic is unchanged
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity onPress={() => navigation.navigate('Logout')} style={{ marginRight: 15 }}>
+          <MaterialIcons name="logout" size={24} color="#ffffff" />
+        </TouchableOpacity>
+      ),
+    });
   }, [navigation]);
 
-  if (isFetching) { /* ... loading view is unchanged ... */ }
-  if (error) { /* ... error view is unchanged ... */ }
+  if (isFetching) {
+    return (
+      <SafeAreaView style={styles.centered}>
+        <ActivityIndicator size="large" />
+        <Text>Loading Station Data...</Text>
+      </SafeAreaView>
+    );
+  }
 
+  if (error) {
+    return (
+      <SafeAreaView style={styles.centered}>
+        <Text>Error loading data: {error}</Text>
+      </SafeAreaView>
+    );
+  }
+
+  
   return (
     <SafeAreaView style={styles.container} edges={['right', 'bottom', 'left']}>
       <KpiHeader />
