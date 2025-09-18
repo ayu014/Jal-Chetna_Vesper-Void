@@ -4,6 +4,9 @@ import LoginScreen from '../screens/Auth/LoginScreen';
 import DashboardScreen from '../screens/App/DashboardScreen';
 import LogoutScreen from '../screens/App/LogoutScreen';
 import WelcomeScreen from '../screens/App/WelcomeScreen'; 
+import AlertsScreen from '../screens/AlertsScreen';
+
+
 
 const Stack = createStackNavigator();
 
@@ -39,5 +42,18 @@ export const AppStack = () => (
       component={LogoutScreen}
       options={{ headerShown: false, presentation: 'modal' }}
     />
+   <Stack.Screen
+     name="Alerts"
+     component={AlertsScreen}
+     options={{
+       title: 'Live Alerts',
+       headerStyle: { backgroundColor: '#EBF5FB' },
+       headerTintColor: '#2E86C1',
+       headerTitleStyle: { fontWeight: 'bold' },
+   }}
+/>
+
+
+
   </Stack.Navigator>
 );
