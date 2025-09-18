@@ -3,56 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jal Chetna - Super Admin</title>
+    <title>Jal Chetna - Intelligent Groundwater Management</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Add Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Your existing navbar and content -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-brand">
-                <h2>Jal Chetna</h2>
+    <!-- Header -->
+    <header class="main-header">
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-brand">
+                    <h2>Jal Chetna</h2>
+                </div>
+                <div class="nav-right">
+                    <button id="loginBtn" class="admin-login-btn">Administrator Login</button>
+                </div>
             </div>
-            <div class="nav-left">
-                <a href="#" class="nav-link">App Links</a>
-                <a href="#" class="nav-link">Benefits</a>
-                <a href="#" class="nav-link">Analytics</a>
-            </div>
-            <div class="nav-right">
-                <button id="loginBtn" class="login-btn">Super Admin Login</button>
-            </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
 
-    <!-- Your existing main content and hero section -->
-    <main class="main-content">
-        <div class="hero-section">
-            <h1>Welcome to Jal Chetna</h1>
-            <p>Water Conservation Management System</p>
-            <div class="hero-stats">
-                <div class="stat-card">
-                    <h3>10,000+</h3>
-                    <p>Active Users</p>
-                </div>
-                <div class="stat-card">
-                    <h3>50+</h3>
-                    <p>Districts Covered</p>
-                </div>
-                <div class="stat-card">
-                    <h3>95%</h3>
-                    <p>Success Rate</p>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1>Intelligent Groundwater Management for India</h1>
+                <p>Jal Chetna empowers administrators with real-time groundwater monitoring, predictive analytics, and actionable insights to ensure sustainable water resource management across India.</p>
+                <div class="hero-buttons">
+                    <button id="accessDashboardBtn" class="btn-primary">Access Dashboard</button>
+                    <button class="btn-secondary">Learn More</button>
                 </div>
             </div>
         </div>
-    </main>
+    </section>
 
-    <!-- Your existing login modal -->
+    <!-- Features Section -->
+    <section class="features-section" id="features-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Platform Benefits & Analytics</h2>
+                <p>Comprehensive groundwater management solution powered by advanced analytics</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>Real-Time Monitoring</h3>
+                    <p>Track groundwater levels across multiple states with live updates and alerts</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-map-marked-alt"></i>
+                    </div>
+                    <h3>Multi-State Coverage</h3>
+                    <p>Monitor groundwater across Maharashtra, Karnataka, and Rajasthan with district-level precision and real-time data visualization.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>Predictive Analytics</h3>
+                    <p>7-day forecast trends using machine learning algorithms to predict groundwater level changes and enable proactive management.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3>Intelligent Alerts</h3>
+                    <p>Automated alert system with severity classification to notify administrators of critical groundwater conditions in real-time.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>HGI Scoring</h3>
+                    <p>Hyperlocal Groundwater Index provides standardized scoring from 0-100 for easy assessment of groundwater health across regions.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Ready</h3>
+                    <p>Responsive design ensures seamless access across desktop, tablet, and mobile devices for field administrators.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Secure Platform</h3>
+                    <p>Enterprise-grade security with role-based access control for government administrators and field officers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile App Section -->
+    <section class="mobile-app-section" id="download-section">
+        <div class="container">
+            <div class="app-content">
+                <h2>Download Jal Chetna Mobile App</h2>
+                <p>Access groundwater data on-the-go with our mobile application</p>
+                <div class="app-buttons">
+                    <a href="#" class="app-store-btn">
+                        <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on App Store">
+                    </a>
+                    <a href="#" class="play-store-btn">
+                        <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Jal Chetna</h3>
+                    <p>Intelligent Groundwater Management Platform for sustainable water resource management across India.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#" id="footerLoginBtn">Administrator Login</a></li>
+                        <li><a href="#features-section">Features</a></li>
+                        <li><a href="#download-section">Mobile App</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>Contact Us</h4>
+                    <ul>
+                        <li><a href="mailto:info@jalchetna.gov.in">info@jalchetna.gov.in</a></li>
+                        <li>+91-11-2345-6789</li>
+                        <li>New Delhi, India</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 Jal Chetna Platform. All rights reserved.</p>
+                <p>Developed by Team Vesper Void</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Login Modal -->
     <div id="loginModal" class="modal-overlay">
         <div class="modal-content">
             <span class="close-btn" id="closeBtn">&times;</span>
-            <h2>Super Admin Login</h2>
+            <h2>Administrator Login</h2>
             <form id="loginForm" class="login-form">
                 <div class="form-group">
                     <label for="username">Username:</label>
