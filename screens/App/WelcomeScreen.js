@@ -6,17 +6,24 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../../constants/colors';
 
 // The MenuButton component is now upgraded to accept and display an icon
-const MenuButton = ({ title, icon, onPress }) => (
+const MenuButton = ({ title, icon, onPress, description, chevronText }) => (
   <TouchableOpacity style={styles.menuButton} onPress={onPress}>
     <MaterialCommunityIcons name={icon} size={48} color={COLORS.primary} />
-    <Text style={styles.menuButtonText}>{title}</Text>
+    <View style={styles.menuButtonContent}>
+      <Text style={styles.menuButtonText}>{title}</Text>
+      <Text style={styles.menuButtonDesc}>{description}</Text>
+    </View>
+    <View style={styles.chevronContainer}>
+      <Text style={styles.chevronText}>{chevronText}</Text>
+      <MaterialCommunityIcons name="chevron-right" size={24} color={COLORS.primary} />
+    </View>
   </TouchableOpacity>
 );
 
 const WelcomeScreen = ({ navigation }) => {
   const user = {
-    firstName: 'Executive',
-    lastName: 'Engineer',
+    firstName: 'Aarav',
+    lastName: 'Sharma',
   };
 
   const handleNotImplemented = () => {
@@ -25,59 +32,72 @@ const WelcomeScreen = ({ navigation }) => {
 
   return (
     <LinearGradient
-      colors={[COLORS.background, '#EBF5FB']} // A subtle gradient from light gray to a light blue
+      colors={[COLORS.background, '#e0f7fa']} // Light green gradient
       style={styles.gradient}
     >
       <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
         {/* --- Custom Header --- */}
         <View style={styles.header}>
-          <View style={styles.userInfo}>
-            <MaterialCommunityIcons name="account-circle-outline" size={40} color={COLORS.primary} />
-            <Text style={styles.userName}>{user.firstName} {user.lastName}</Text>
-          </View>
-          <TouchableOpacity onPress={handleNotImplemented}>
-            <Text style={styles.settingsText}>Settings</Text>
+          <MaterialCommunityIcons name="water" size={24} color={COLORS.primary} />
+          <TouchableOpacity onPress={() => navigation.navigate('Logout')} style={styles.logoutButton}>
+            <Text style={styles.logoutText}>Logout</Text>
           </TouchableOpacity>
         </View>
 
-        {/* --- Personalized Welcome Message --- */}
-        <View style={styles.welcomeContainer}>
-          <Text style={styles.welcomeMessage}>Welcome,</Text>
-          <Text style={styles.welcomeUser}>{user.firstName}!</Text>
-        </View>
-
-        {/* --- 2x2 Grid of Menu Buttons with Icons --- */}
-        <View style={styles.gridContainer}>
-          <View style={styles.gridRow}>
-            <MenuButton 
-              title="GIS Dashboard" 
-              icon="map-legend"
-              onPress={() => navigation.navigate('Dashboard')} 
-            />
-            <MenuButton 
-              title="Alerts" 
-              icon="bell-outline"
-              onPress={() => navigation.navigate('Alerts')}
-            />
-          </View>
-          <View style={styles.gridRow}>
-            <MenuButton 
-              title="Forecast" 
-              icon="chart-line"
-              onPress={handleNotImplemented} 
-            />
-            <MenuButton 
-              title="Prediction" 
-              icon="brain"
-              onPress={handleNotImplemented} 
-            />
+        {/* --- App Title and User Profile --- */}
+        <Text style={styles.title}>Intelligent Groundwater Management for India</Text>
+        <View style={styles.userProfile}>
+          <MaterialCommunityIcons name="account-circle-outline" size={40} color={COLORS.primary} />
+          <View style={styles.userInfo}>
+            <Text style={styles.userName}>{user.firstName} {user.lastName}</Text>
+            <Text style={styles.userDesc}>Real-time monitoring, predictive analytics, and actionable insights for sustainable water resources.</Text>
           </View>
         </View>
 
-        {/* --- Floating Chat Bot Button --- */}
-        <TouchableOpacity style={styles.chatButton} onPress={handleNotImplemented}>
-          <MaterialCommunityIcons name="robot-happy-outline" size={32} color={COLORS.white} />
-        </TouchableOpacity>
+        {/* --- Live Status Badge --- */}
+        <View style={styles.liveBadge}>
+          <Text style={styles.liveText}>Live National aquifer status synced +5 mins ago</Text>
+        </View>
+
+        {/* --- Vertical List of Menu Buttons with Descriptions --- */}
+        <View style={styles.buttonList}>
+          <MenuButton 
+            title="GIS Dashboard" 
+            icon="layers-outline"
+            onPress={() => navigation.navigate('Dashboard')} 
+            description="Explore wells, aquifers, layers across districts."
+            chevronText="Open"
+          />
+          <MenuButton 
+            title="Alerts" 
+            icon="bell-outline"
+            onPress={() => navigation.navigate('Alerts')}
+            description="Get notified on threshold breaches and risks."
+            chevronText="View"
+          />
+          <MenuButton 
+            title="Forecast" 
+            icon="weather-cloudy"
+            onPress={handleNotImplemented} 
+            description="Short-term recharge and inflow expectations."
+            chevronText="See"
+          />
+          <MenuButton 
+            title="Prediction" 
+            icon="brain"
+            onPress={handleNotImplemented} 
+            description="Model-driven long-range groundwater trends."
+            chevronText="Open"
+          />
+        </View>
+
+        {/* --- Tip and Assistant Button --- */}
+        <View style={styles.tipContainer}>
+          <Text style={styles.tipText}>Tip. Tap the assistant to ask about district-level water resources</Text>
+          <TouchableOpacity style={styles.assistantButton} onPress={handleNotImplemented}>
+            <MaterialCommunityIcons name="head-question-outline" size={24} color={COLORS.white} />
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -89,80 +109,119 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 15,
+    paddingBottom: 10,
   },
-  userInfo: {
+  logoutButton: {
+    backgroundColor: '#ff0000',
+    borderRadius: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+  },
+  logoutText: {
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: COLORS.primary,
+    marginBottom: 10,
+    marginTop: 20,
+  },
+  userProfile: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 20,
+  },
+  userInfo: {
+    marginLeft: 10,
   },
   userName: {
-    marginLeft: 10,
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
     color: COLORS.primary,
   },
-  settingsText: {
-    fontSize: 16,
-    color: COLORS.secondary,
-    fontWeight: '500',
-  },
-  welcomeContainer: {
-    marginTop: 25,
-    marginBottom: 35,
-  },
-  welcomeMessage: {
-    fontSize: 36,
-    fontWeight: '300', // Lighter weight for "Welcome,"
+  userDesc: {
+    fontSize: 14,
     color: COLORS.primary,
   },
-  welcomeUser: {
-    fontSize: 42,
-    fontWeight: 'bold', // Bolder weight for the username
-    color: COLORS.primary,
-  },
-  gridContainer: {
-    width: '100%',
-  },
-  gridRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around', // Use space-around for better gaps
+  liveBadge: {
+    backgroundColor: '#90ee90',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    alignSelf: 'flex-start',
     marginBottom: 20,
   },
+  liveText: {
+    color: COLORS.primary,
+    fontSize: 14,
+  },
+  buttonList: {
+    flex: 1,
+  },
   menuButton: {
-    width: '47%',
-    aspectRatio: 1, // Make them square for a modern look
-    backgroundColor: 'rgba(255, 255, 255, 0.8)', // Slightly transparent white
-    borderRadius: 20, // More rounded corners
-    justifyContent: 'center',
+    flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.05)',
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 15,
     elevation: 5,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 12,
   },
+  menuButtonContent: {
+    flex: 1,
+    marginLeft: 15,
+  },
   menuButtonText: {
-    marginTop: 10,
     fontSize: 16,
     fontWeight: '600',
     color: COLORS.primary,
   },
-  chatButton: {
-    position: 'absolute',
-    bottom: 30,
-    right: 20,
+  menuButtonDesc: {
+    fontSize: 14,
+    color: COLORS.primary,
+    marginTop: 5,
+  },
+  chevronContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  chevronText: {
+    fontSize: 14,
+    color: COLORS.primary,
+    marginRight: 5,
+  },
+  tipContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  tipText: {
+    fontSize: 14,
+    color: COLORS.primary,
+    flex: 1,
+  },
+  assistantButton: {
     backgroundColor: COLORS.secondary,
-    borderRadius: 35,
-    width: 70,
-    height: 70,
+    borderRadius: 25,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 8,
