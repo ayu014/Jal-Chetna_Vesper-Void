@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Image } from 'react-native';
 import { 
   View, 
   Text, 
@@ -43,12 +44,19 @@ const LoginScreen = () => {
       [{ text: "OK" }]
     );
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.logoPlaceholder}>
-        <Text style={styles.logoPlaceholderText}>LOGO</Text>
-      </View>
+<View style={styles.logoPlaceholder}>
+  <Image 
+    source={require('../../assets/images/logo.jpg')} 
+    style={styles.logoImage}
+    resizeMode="contain"
+  />
+</View>
+
+
 
       <Text style={styles.title}>Groundwater Monitoring</Text>
       <Text style={styles.subtitle}>Executive Dashboard - Punjab</Text>
@@ -100,17 +108,20 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
     padding: 20,
   },
-  logoPlaceholder: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    backgroundColor: COLORS.lightGray,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: COLORS.secondary,
-    borderWidth: 2,
-    marginBottom: 30,
-  },
+  logoImage: {
+  width: 100,
+  height: 100,
+  borderRadius: 50, // optional, only if you want circular image
+}
+,
+logoPlaceholder: {
+  width: 120,
+  height: 120,
+  justifyContent: 'center',
+  alignItems: 'center',
+  marginBottom: 30,
+}
+,
   logoPlaceholderText: {
     color: COLORS.gray,
     fontSize: 24,

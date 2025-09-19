@@ -33,10 +33,16 @@ export const AuthProvider = ({ children }) => {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
     },
-    logout: async () => {
-      const { error } = await supabase.auth.signOut();
-      if (error) throw error;
-    },
+logout: async () => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    setSession(null); // <- immediately update local state
+  } catch (err) {
+    console.log('Logout error:', err.message);
+  }
+}
+,
     // You can add a signUp function for future use
     signUp: async (email, password) => {
       const { error } = await supabase.auth.signUp({ email, password });

@@ -57,7 +57,7 @@ const WelcomeScreen = ({ navigation }) => {
             <MenuButton 
               title="Alerts" 
               icon="bell-outline"
-              onPress={handleNotImplemented} 
+              onPress={() => navigation.navigate('Alerts')}
             />
           </View>
           <View style={styles.gridRow}>

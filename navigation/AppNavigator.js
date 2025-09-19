@@ -4,7 +4,7 @@ import LoginScreen from '../screens/Auth/LoginScreen';
 import DashboardScreen from '../screens/App/DashboardScreen';
 import LogoutScreen from '../screens/App/LogoutScreen';
 import WelcomeScreen from '../screens/App/WelcomeScreen'; 
-
+import AlertsScreen from '../screens/App/AlertsScreen'; 
 const Stack = createStackNavigator();
 
 export const AuthStack = () => (
@@ -38,6 +38,11 @@ export const AppStack = () => (
       name="Logout"
       component={LogoutScreen}
       options={{ headerShown: false, presentation: 'modal' }}
+    />
+    <Stack.Screen
+      name="Alerts"
+      component={AlertsScreen}
+      options={{ title: 'Alerts', presentation: 'modal' }}
     />
   </Stack.Navigator>
 );
