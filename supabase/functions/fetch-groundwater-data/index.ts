@@ -14,8 +14,6 @@ const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
 serve(async (req) => {
   try {
-    // To write to the database from a function, we must create a special
-    // admin client that has full access.
     const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -23,20 +21,37 @@ serve(async (req) => {
 
     const endDate = new Date();
     const startDate = new Date();
-    startDate.setDate(endDate.getDate() - 7); // Look back 7 days for data
+    startDate.setDate(endDate.getDate() - 7);
 
-    const apiUrl = `https://indiawris.gov.in/Dataset/Ground%20Water%20Level?stateName=Punjab&districtName=Sangrur&agencyName=CGWB&startdate=${formatDate(startDate)}&enddate=${formatDate(endDate)}&download=false&page=0&size=1000`;
+    // NEW: Define the list of districts to fetch
+    const districts = ['Sangrur', 'Ludhiana', 'Amritsar'];
 
-    const response = await fetch(apiUrl, { method: 'POST' });
-    if (!response.ok) throw new Error('IndiaWRIS API fetch failed');
+    // NEW: Create an array of fetch promises, one for each district
+    const fetchPromises = districts.map(districtName => {
+      const apiUrl = `https://indiawris.gov.in/Dataset/Ground%20Water%20Level?stateName=Punjab&districtName=${districtName}&agencyName=CGWB&startdate=${formatDate(startDate)}&enddate=${formatDate(endDate)}&download=false&page=0&size=1000`;
+      return fetch(apiUrl, { method: 'POST' });
+    });
 
-    const apiResponse = await response.json();
-    const rawStations = apiResponse.data;
-    if (!Array.isArray(rawStations)) throw new Error('Invalid data from API');
+    // NEW: Execute all fetch requests concurrently and wait for them all to complete
+    const responses = await Promise.all(fetchPromises);
 
-    // Find the latest reading for each unique station
+    // NEW: Process all responses and combine the data into one array
+    let allRawStations: any[] = [];
+    for (const response of responses) {
+      if (!response.ok) {
+        console.error(`API fetch failed with status: ${response.status}`);
+        continue; // Skip this district if it fails, but continue with others
+      }
+      const apiResponse = await response.json();
+      if (Array.isArray(apiResponse.data)) {
+        allRawStations = [...allRawStations, ...apiResponse.data];
+      }
+    }
+    
+    // The rest of the logic is the same, but it now operates on the combined data
+    // --- Find the latest reading for each unique station ---
     const latestStationsMap = new Map<string, any>();
-    for (const station of rawStations) {
+    for (const station of allRawStations) {
       if (!station.stationCode) continue;
       const existing = latestStationsMap.get(station.stationCode);
       if (!existing || new Date(station.dataTime) > new Date(existing.dataTime)) {
@@ -45,7 +60,7 @@ serve(async (req) => {
     }
     const uniqueLatestStations = Array.from(latestStationsMap.values());
 
-    // Format the data to match our new 'live_station_data' table structure
+    // Format the data to match our 'live_station_data' table structure
     const dataToUpsert = uniqueLatestStations.map(station => ({
       id: station.stationCode,
       name: station.stationName,
@@ -56,16 +71,21 @@ serve(async (req) => {
       last_reading_time: station.dataTime,
     }));
 
-    // This is the key step: Upsert the clean data into our database table.
-    // 'upsert' will INSERT new stations and UPDATE existing ones.
+    if (dataToUpsert.length === 0) {
+      return new Response(JSON.stringify({ message: 'No new station data found to update.' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
+      });
+    }
+
+    // Upsert the combined, clean data into our database table.
     const { error: upsertError } = await supabaseAdmin
       .from('live_station_data')
       .upsert(dataToUpsert);
 
     if (upsertError) throw upsertError;
 
-    // The function now returns a simple success message.
-    return new Response(JSON.stringify({ message: `Successfully updated ${dataToUpsert.length} stations.` }), {
+    return new Response(JSON.stringify({ message: `Successfully updated ${dataToUpsert.length} stations across ${districts.length} districts.` }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       status: 200,
     });
