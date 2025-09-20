@@ -145,7 +145,9 @@ const StationDetailScreen = ({ route, navigation }) => {
 
         {/* Forecast Data Chart */}
         <View style={styles.chartCard}>
-          <Text style={styles.chartTitle}>10-Day Groundwater Forecast (m)</Text>
+          <Text style={styles.chartTitle}>
+            10-Day Water Recharge Forecast (m)
+          </Text>
           <LineChart
             data={{
               labels: ["+1d", "+3d", "+5d", "+7d", "+9d", "+10d"], // Fewer labels for clarity

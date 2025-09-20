@@ -80,7 +80,7 @@ const WelcomeScreen = ({ navigation }) => {
   const [isManualAlarm, setIsManualAlarm] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
   const alarmTimeoutRef = useRef(null);
-  
+
   const handleLogout = () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
       { text: "Cancel", style: "cancel" },
@@ -249,8 +249,7 @@ const WelcomeScreen = ({ navigation }) => {
               onPress={handleLogout}
               style={styles.logoutButton}
             >
-              <MaterialCommunityIcons name="logout" size={18} color="white" />
-              <Text style={styles.logoutText}>Logout</Text>
+              <MaterialCommunityIcons name="logout" size={20} color="white" />
             </TouchableOpacity>
           </View>
         </View>
@@ -260,8 +259,6 @@ const WelcomeScreen = ({ navigation }) => {
             Intelligent Groundwater Management for India
           </Text>
         </View>
-
-
 
         <View style={styles.gridContainer}>
           <View style={styles.gridRow}>
@@ -352,7 +349,6 @@ const WelcomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-
   gradient: {
     flex: 1,
   },
@@ -405,19 +401,19 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   logoutButton: {
-    backgroundColor: COLORS.secondary,
-    borderRadius: 8,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    elevation: 3,
-  },
-  logoutText: {
-    color: "white",
-    fontWeight: "bold",
-    marginLeft: 8,
-    fontSize: 16,
+    backgroundColor: COLORS.primary,
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    borderWidth: 2,
+    borderColor: COLORS.white,
   },
   profileContainer: {
     marginTop: 40,
