@@ -6,9 +6,10 @@ import { supabase } from '../../services/supabase';
 import { COLORS } from '../../constants/colors';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-// Import the functional components
+// Import all your functional components
 import ComplaintForm from '../../components/farmer/ComplaintForm';
 import NearestStation from '../../components/farmer/NearestStation';
+import CropRecommendation from '../../components/farmer/CropRecommendation';
 
 const FarmerDashboardScreen = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -32,15 +33,11 @@ const FarmerDashboardScreen = () => {
     }
   };
   
-  // This is now a placeholder for the final component
-  const CropRecommendation = () => <View style={styles.placeholder}><Text>{i18n.t('farmerDashboard.cropRecommendation')}</Text></View>;
-  
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
         <Text style={styles.title}>{i18n.t('farmerDashboard.title')}</Text>
 
-        {/* The fully functional NearestStation component is now used here */}
         <NearestStation />
         
         <TouchableOpacity 
@@ -51,6 +48,7 @@ const FarmerDashboardScreen = () => {
           <Text style={styles.complaintButtonText}>{i18n.t('farmerDashboard.complaintForm')}</Text>
         </TouchableOpacity>
 
+        {/* The placeholder is now replaced with the real component */}
         <CropRecommendation />
 
         <Modal
@@ -86,15 +84,6 @@ const styles = StyleSheet.create({
     textAlign: 'center', 
     marginVertical: 20, 
     marginHorizontal: 16 
-  },
-  placeholder: { 
-    backgroundColor: '#ffffff', 
-    borderRadius: 8, 
-    padding: 40, 
-    marginHorizontal: 16, 
-    marginBottom: 16, 
-    alignItems: 'center', 
-    elevation: 2 
   },
   complaintButton: {
     backgroundColor: COLORS.white,
