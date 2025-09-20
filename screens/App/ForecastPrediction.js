@@ -17,10 +17,10 @@ const DistrictsScreen = ({ navigation }) => {
     { id: '3', name: 'Amritsar', description: 'District Amritsar Information' },
   ];
 
-  const handleDistrictPress = (district) => {
-    console.log(`Pressed ${district.name}`);
-    // navigation.navigate('DistrictDetails', { district });
-  };
+const handleDistrictPress = (district) => {
+  // Change this line
+  navigation.navigate('StationList', { districtName: district.name });
+};
 
   const renderDistrictItem = (district) => (
     <TouchableOpacity
@@ -46,7 +46,7 @@ const DistrictsScreen = ({ navigation }) => {
       <StatusBar backgroundColor="#4A90E2" barStyle="light-content" />
 
       {/* Header */}
-      <View style={styles.header}>
+      {/* <View style={styles.header}>
         <TouchableOpacity 
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -54,7 +54,7 @@ const DistrictsScreen = ({ navigation }) => {
           <Icon name="arrow-back" size={24} color="#fff" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Select District</Text>
-      </View>
+      </View> */}
 
       {/* Search Bar */}
       <View style={styles.searchContainer}>

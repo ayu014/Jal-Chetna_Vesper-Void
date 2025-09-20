@@ -22,3 +22,14 @@ entrypoint = "./functions/fetch-stations/index.ts"
 # Specifies static files to be bundled with the function. Supports glob patterns.
 # For example, if you want to serve static HTML pages in your function:
 # static_files = [ "./functions/fetch-stations/*.html" ]
+
+[functions.generate-station-forecast]
+enabled = true
+verify_jwt = true
+import_map = "./functions/generate-station-forecast/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/generate-station-forecast/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/generate-station-forecast/*.html" ]

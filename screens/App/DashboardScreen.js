@@ -24,8 +24,6 @@ const DashboardScreen = ({ navigation }) => {
           
         if (error) throw error;
         
-        // THE FIX IS HERE 👇
-        // We now explicitly map the database's 'water_level' to our app's desired 'waterLevel'
         const formattedData = data.map(station => ({
           ...station,
           waterLevel: station.water_level, // Convert snake_case to camelCase
@@ -54,7 +52,8 @@ const DashboardScreen = ({ navigation }) => {
     } else {
       const result = allStations.filter(station =>
         station.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        String(station.id).toLowerCase().includes(searchQuery.toLowerCase())
+        String(station.id).toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (station.district && station.district.toLowerCase().includes(searchQuery.toLowerCase()))
       );
       setFilteredStations(result);
     }
@@ -87,13 +86,11 @@ const DashboardScreen = ({ navigation }) => {
     );
   }
 
-  
   return (
     <SafeAreaView style={styles.container} edges={['right', 'bottom', 'left']}>
       <KpiHeader />
       <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
       <View style={styles.mapContainer}>
-        {/* We now pass 'allStations' so the popup menu logic works */}
         <MapView
           stationsToDisplay={filteredStations}
           allStations={allStations}
