@@ -9,6 +9,8 @@ import DistrictsScreen from "../screens/App/ForecastPrediction";
 import StationListScreen from "../screens/App/StationListScreen";
 import StationDetailScreen from "../screens/App/StationDetailScreen";
 import FarmerDashboard from "../screens/App/FarmerDashboard";
+import IndustrialDashboardScreen from "../screens/App/IndustrialDashboardScreen"; // 1. Import the new screen
+
 const Stack = createStackNavigator();
 
 export const AuthStack = () => (
@@ -23,12 +25,17 @@ export const AuthStack = () => (
       component={FarmerDashboard}
       options={{ title: "Farmer Dashboard" }}
     />
+    {/* 2. Add the Industrial Dashboard to the public stack */}
+    <Stack.Screen
+      name="IndustrialDashboard"
+      component={IndustrialDashboardScreen}
+      options={{ title: "Industrial Dashboard" }}
+    />
   </Stack.Navigator>
 );
 
 export const AppStack = () => (
   <Stack.Navigator
-    // 2. Set the FIRST screen to be 'Welcome'
     initialRouteName="Welcome"
     screenOptions={{
       headerStyle: { backgroundColor: "#2c3e50" },
@@ -39,7 +46,6 @@ export const AppStack = () => (
     <Stack.Screen
       name="Welcome"
       component={WelcomeScreen}
-      // 3. Hide the default header for the Welcome screen since it has its own
       options={{ headerShown: false }}
     />
     <Stack.Screen
