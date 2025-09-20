@@ -22,7 +22,6 @@ const SearchBar = ({ value, onChangeText }) => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 12,
@@ -49,5 +48,6 @@ const styles = StyleSheet.create({
     color: '#424242',
   },
 });
+
 
 export default SearchBar;

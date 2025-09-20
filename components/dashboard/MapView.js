@@ -85,8 +85,29 @@ const MapViewComponent = ({ stationsToDisplay, allStations }) => {
 };
 
 const styles = StyleSheet.create({
-  map: { ...StyleSheet.absoluteFillObject },
-  // NEW: Style for the custom circle marker
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 18, // Equal margin from all sides
+    backgroundColor: '#f4f6f8', // Optional: match app background
+  },
+  map: {
+    flex: 1,
+    alignSelf: 'stretch',
+    borderRadius: 24,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: '#e0e0e0',
+    // Shadow for iOS
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    // Shadow for Android
+    elevation: 6,
+    backgroundColor: '#fff',
+  },
   markerCircle: {
     width: 24,
     height: 24,
@@ -95,5 +116,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.5)', // A semi-transparent white border for definition
   },
 });
+
+
 
 export default MapViewComponent;
