@@ -13,12 +13,13 @@ import StationDetailScreen from "../screens/App/StationDetailScreen";
 import FarmerDashboard from "../screens/App/FarmerDashboard";
 import OnboardingScreen from "../screens/App/OnboardingScreen";
 import { useAuth } from "../context/AuthContext";
+import IndustrialDashboardScreen from "../screens/App/IndustrialDashboardScreen";
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
   const [showOnboarding, setShowOnboarding] = useState(null);
-  const { session, isLoading } = useAuth();
+  const { session } = useAuth();
 
   useEffect(() => {
     const checkOnboarding = async () => {
@@ -42,7 +43,7 @@ const AppNavigator = () => {
     }
   };
 
-  if (showOnboarding === null || isLoading) {
+  if (showOnboarding === null) {
     return null; // or a splash screen
   }
 
@@ -80,6 +81,11 @@ const AppNavigator = () => {
               options={{ headerShown: false }}
             />
             <Stack.Screen name="FarmerDashboard" component={FarmerDashboard} />
+            <Stack.Screen
+              name="IndustrialDashboard"
+              component={IndustrialDashboardScreen}
+              options={{ title: "Industrial Dashboard" }}
+            />
           </>
         )}
       </Stack.Navigator>
