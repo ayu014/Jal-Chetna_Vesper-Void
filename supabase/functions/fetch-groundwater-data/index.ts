@@ -14,10 +14,17 @@ const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
 serve(async (req) => {
   try {
-    const supabaseAdmin = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
+    // Read the service role key from the Authorization header
+const serviceKey = req.headers.get('Authorization')?.replace('Bearer ', '');
+if (!serviceKey) {
+  return new Response(JSON.stringify({ error: 'Missing service key' }), { status: 401 });
+}
+
+const supabaseAdmin = createClient(
+  Deno.env.get('SUPABASE_URL') ?? '',
+  serviceKey
+);
+
 
     const endDate = new Date();
     const startDate = new Date();
