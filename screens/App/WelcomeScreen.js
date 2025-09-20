@@ -244,7 +244,7 @@ const WelcomeScreen = ({ navigation }) => {
             <WideMenuButton 
               title="Forecast & Prediction" 
               icon="chart-line"
-              onPress={handleNotImplemented} 
+              onPress={() => navigation.navigate('Prediction')}
               description="Short-term forecasts and long-range predictive analytics."
               chevronText="Explore"
             />

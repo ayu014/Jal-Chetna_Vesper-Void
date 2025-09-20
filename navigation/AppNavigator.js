@@ -5,6 +5,7 @@ import DashboardScreen from '../screens/App/DashboardScreen';
 import LogoutScreen from '../screens/App/LogoutScreen';
 import WelcomeScreen from '../screens/App/WelcomeScreen'; 
 import AlertsScreen from '../screens/App/AlertsScreen'; 
+import DistrictsScreen from '../screens/App/ForecastPrediction'; 
 const Stack = createStackNavigator();
 
 export const AuthStack = () => (
@@ -43,6 +44,11 @@ export const AppStack = () => (
       name="Alerts"
       component={AlertsScreen}
       options={{ title: 'Alerts', presentation: 'modal' }}
+    />
+    <Stack.Screen
+      name="Prediction"
+      component={DistrictsScreen}
+      options={{ title: 'Prediction', presentation: 'modal' }}
     />
   </Stack.Navigator>
 );
