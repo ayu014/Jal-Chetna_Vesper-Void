@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Image } from "react-native";
+import { Image, Modal, FlatList } from "react-native";
 import {
   View,
   Text,
@@ -26,7 +26,10 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false); // Local loading state for the button
+  const [isLoading, setIsLoading] = useState(false);
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+  const languages = ["Hindi", "Punjabi", "Telugu", "English", "Tamil"];
+  
   const translateY = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
@@ -34,10 +37,8 @@ const LoginScreen = () => {
     Keyboard.dismiss();
     setError("");
     setIsLoading(true);
-
     try {
       await login(email, password);
-      // If login is successful, the onAuthStateChange listener in AuthContext will handle navigation
     } catch (e) {
       setError(e.message);
     } finally {
@@ -52,9 +53,18 @@ const LoginScreen = () => {
       [{ text: "OK" }]
     );
   };
+  
+  const handleFarmerLogin = () => {
+    setLanguageModalVisible(true);
+  };
+
+  const onSelectLanguage = (language) => {
+    console.log(`${language} selected`);
+    setLanguageModalVisible(false);
+    navigation.navigate("FarmerDashboard");
+  };
 
   useEffect(() => {
-    // fade in on mount
     Animated.timing(opacity, {
       toValue: 1,
       duration: 400,
@@ -93,7 +103,6 @@ const LoginScreen = () => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <SafeAreaView style={styles.container}>
@@ -124,9 +133,6 @@ const LoginScreen = () => {
                   autoCapitalize="none"
                   keyboardType="email-address"
                   returnKeyType="next"
-                  onSubmitEditing={() => {
-                    // focus password if needed
-                  }}
                 />
                 <TextInput
                   style={styles.input}
@@ -154,7 +160,7 @@ const LoginScreen = () => {
 
               <TouchableOpacity
                 style={[styles.button, styles.farmerButton]}
-                onPress={() => navigation.navigate("FarmerDashboard")}
+                onPress={handleFarmerLogin}
               >
                 <Text style={styles.buttonText}>Farmer Login</Text>
               </TouchableOpacity>
@@ -167,6 +173,32 @@ const LoginScreen = () => {
               </TouchableOpacity>
             </View>
           </Animated.View>
+
+          <Modal
+            visible={languageModalVisible}
+            transparent={true}
+            animationType="fade"
+            onRequestClose={() => setLanguageModalVisible(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <View style={styles.modalContainer}>
+                <Text style={styles.modalTitle}>Select Language</Text>
+                <FlatList
+                  data={languages}
+                  keyExtractor={(item) => item}
+                  renderItem={({ item }) => (
+                    <TouchableOpacity style={styles.languageOption} onPress={() => onSelectLanguage(item)}>
+                      <Text style={styles.languageText}>{item}</Text>
+                    </TouchableOpacity>
+                  )}
+                />
+                <TouchableOpacity style={styles.cancelButton} onPress={() => setLanguageModalVisible(false)}>
+                   <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+
         </SafeAreaView>
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
@@ -194,7 +226,7 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 110,
     height: 110,
-    borderRadius: 55, // circular image
+    borderRadius: 55,
     alignSelf: "center",
   },
   logoPlaceholder: {
@@ -203,11 +235,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 20,
-  },
-  logoPlaceholderText: {
-    color: COLORS.gray,
-    fontSize: 24,
-    fontWeight: "bold",
   },
   title: {
     fontSize: 28,
@@ -269,6 +296,42 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     fontSize: 14,
     fontWeight: "600",
+  },
+  modalOverlay: { 
+    flex: 1, 
+    backgroundColor: 'rgba(0,0,0,0.5)', 
+    justifyContent: 'center', 
+    alignItems: 'center' 
+  },
+  modalContainer: { 
+    backgroundColor: 'white', 
+    borderRadius: 10, 
+    padding: 20, 
+    width: '80%' 
+  },
+  modalTitle: { 
+    fontSize: 18, 
+    fontWeight: 'bold', 
+    marginBottom: 15, 
+    textAlign: 'center' 
+  },
+  languageOption: { 
+    paddingVertical: 15, 
+    borderBottomWidth: 1, 
+    borderBottomColor: '#eee' 
+  },
+  languageText: { 
+    fontSize: 16, 
+    textAlign: 'center' 
+  },
+  cancelButton: { 
+    marginTop: 10, 
+    paddingVertical: 15 
+  },
+  cancelText: { 
+    fontSize: 16, 
+    textAlign: 'center', 
+    color: 'red' 
   },
 });
 
