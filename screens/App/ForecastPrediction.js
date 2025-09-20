@@ -7,11 +7,13 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
+  TextInput,
 } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons"; // Using MaterialIcons for a consistent look
 
 const DistrictsScreen = ({ navigation }) => {
-  // Added an 'icon' property to each district for better visual distinction
+
+  const [searchQuery, setSearchQuery] = React.useState("");
   const districts = [
     {
       id: "1",
@@ -32,6 +34,10 @@ const DistrictsScreen = ({ navigation }) => {
       icon: "location-city",
     },
   ];
+
+  const filteredDistricts = districts.filter((district) =>
+    district.name.toLowerCase().includes(searchQuery.trim().toLowerCase())
+  );
 
   const handleDistrictPress = (district) => {
     // This core logic remains unchanged
@@ -78,10 +84,16 @@ const DistrictsScreen = ({ navigation }) => {
         </Text>
       </View>
 
-      {/* Search Bar (Visual Placeholder) */}
       <View style={styles.searchContainer}>
         <Icon name="search" size={22} color={COLORS.textSecondary} />
-        <Text style={styles.searchPlaceholder}>Search for a district...</Text>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search for a district..."
+          placeholderTextColor={COLORS.textSecondary}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          underlineColorAndroid="transparent"
+        />
       </View>
 
       {/* Districts List */}
@@ -89,7 +101,13 @@ const DistrictsScreen = ({ navigation }) => {
         style={styles.listContainer}
         showsVerticalScrollIndicator={false}
       >
-        {districts.map((district) => renderDistrictItem(district))}
+        {filteredDistricts.length > 0 ? (
+          filteredDistricts.map((district) => renderDistrictItem(district))
+        ) : (
+          <Text style={{ color: COLORS.textSecondary, textAlign: 'center', marginTop: 30 }}>
+            No districts found.
+          </Text>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -142,10 +160,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
   },
-  searchPlaceholder: {
+  searchInput: {
+    flex: 1,
     fontSize: 16,
-    color: COLORS.textSecondary,
+    color: COLORS.text,
     marginLeft: 10,
+    padding: 0,
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   // List Styles
   listContainer: {

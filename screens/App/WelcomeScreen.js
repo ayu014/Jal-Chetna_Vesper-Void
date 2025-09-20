@@ -16,7 +16,6 @@ import { Audio } from "expo-av";
 import { COLORS } from "../../constants/colors";
 import { useAuth } from "../../context/AuthContext";
 
-// Try to import supabase, but provide a fallback if it fails
 let supabase;
 try {
   supabase = require("../../services/supabase").supabase;
@@ -25,7 +24,6 @@ try {
   supabase = null;
 }
 
-// MenuButton component
 const MenuButton = ({ title, icon, onPress, description, chevronText }) => (
   <TouchableOpacity style={styles.menuButton} onPress={onPress}>
     <View style={styles.iconContainer}>
@@ -46,7 +44,6 @@ const MenuButton = ({ title, icon, onPress, description, chevronText }) => (
   </TouchableOpacity>
 );
 
-// WideMenuButton component
 const WideMenuButton = ({ title, icon, onPress, description, chevronText }) => (
   <TouchableOpacity style={styles.wideMenuButton} onPress={onPress}>
     <View style={styles.iconContainer}>
@@ -83,12 +80,18 @@ const WelcomeScreen = ({ navigation }) => {
   const [isManualAlarm, setIsManualAlarm] = useState(false);
   const [showAlertModal, setShowAlertModal] = useState(false);
   const alarmTimeoutRef = useRef(null);
+  
+  const handleLogout = () => {
+    Alert.alert("Logout", "Are you sure you want to logout?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Logout", style: "destructive", onPress: logout },
+    ]);
+  };
 
   const handleNotImplemented = () => {
     Alert.alert("Feature Not Available", "This feature is coming soon.");
   };
 
-  // Play alarm
   async function playAlarm() {
     try {
       const { sound } = await Audio.Sound.createAsync(
@@ -108,10 +111,10 @@ const WelcomeScreen = ({ navigation }) => {
     }
   }
 
-  // Stop alarm
   async function stopAlarm() {
     if (sound) {
       await sound.stopAsync();
+      await sound.unloadAsync();
       setSound(null);
     }
     if (alarmTimeoutRef.current) clearTimeout(alarmTimeoutRef.current);
@@ -119,7 +122,6 @@ const WelcomeScreen = ({ navigation }) => {
     setShowAlertModal(false);
   }
 
-  // Manual alarm trigger
   const triggerManualAlarm = () => {
     setIsManualAlarm(true);
     setIsDataOutdated(true);
@@ -151,33 +153,19 @@ const WelcomeScreen = ({ navigation }) => {
   ];
 
   const mockCheckDataFreshness = () => {
-    const mockLastUpdated = new Date();
-    setLastUpdated(mockLastUpdated);
-    const tenDaysAgo = new Date();
-    tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
-
-    if (mockLastUpdated < tenDaysAgo && !isManualAlarm) {
-      setIsDataOutdated(true);
-      setProblemStations(getMockProblemStations());
-      playAlarm();
-    } else if (!isManualAlarm) {
-      setIsDataOutdated(false);
-      setProblemStations([]);
-      stopAlarm();
-    }
-
     setIsCheckingData(false);
   };
 
   const checkDataFreshness = async () => {
     if (!supabase) return mockCheckDataFreshness();
+    setIsCheckingData(true);
     try {
       const { data, error } = await supabase
         .from("amritsar_daily_summary")
         .select("stationCode, stationName, last_updated")
         .order("last_updated", { ascending: false });
 
-      if (error) return mockCheckDataFreshness();
+      if (error) throw error;
 
       if (data && data.length > 0 && !isManualAlarm) {
         const latestUpdate = new Date(
@@ -189,26 +177,21 @@ const WelcomeScreen = ({ navigation }) => {
         const outdatedStations = data.filter(
           (station) => new Date(station.last_updated) < tenDaysAgo
         );
-        if (outdatedStations.length > 0 || latestUpdate < tenDaysAgo) {
+        if (outdatedStations.length > 0) {
           setIsDataOutdated(true);
           setProblemStations(outdatedStations);
-          playAlarm();
+          if (!showAlertModal) playAlarm();
         } else {
           setIsDataOutdated(false);
           setProblemStations([]);
-          stopAlarm();
         }
       } else if (!isManualAlarm) {
         setLastUpdated(null);
-        setIsDataOutdated(true);
-        setProblemStations([]);
-        playAlarm();
       }
-
-      setIsCheckingData(false);
     } catch (error) {
       console.error(error);
-      mockCheckDataFreshness();
+    } finally {
+      setIsCheckingData(false);
     }
   };
 
@@ -217,7 +200,6 @@ const WelcomeScreen = ({ navigation }) => {
     const intervalId = setInterval(checkDataFreshness, 5 * 60 * 1000);
     return () => {
       clearInterval(intervalId);
-      stopAlarm();
       if (sound) sound.unloadAsync();
     };
   }, []);
@@ -227,17 +209,17 @@ const WelcomeScreen = ({ navigation }) => {
     if (!lastUpdated) return "No data available";
     const now = new Date();
     const diffMins = Math.floor((now - lastUpdated) / 60000);
-    const diffHrs = Math.floor(diffMins / 60);
-    const diffDays = Math.floor(diffHrs / 24);
+    if (diffMins < 2) return "Synced just now";
     if (diffMins < 60) return `Synced ${diffMins} mins ago`;
+    const diffHrs = Math.floor(diffMins / 60);
     if (diffHrs < 24) return `Synced ${diffHrs} hours ago`;
+    const diffDays = Math.floor(diffHrs / 24);
     return `Synced ${diffDays} days ago`;
   };
 
   return (
     <LinearGradient colors={["#e0f7fa", "#e0f7fa"]} style={styles.gradient}>
       <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
-        {/* Header */}
         <View style={styles.header}>
           <View style={styles.userInfoHeader}>
             <Image
@@ -264,45 +246,23 @@ const WelcomeScreen = ({ navigation }) => {
               />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => {
-                Alert.alert("Logout", "Are you sure you want to logout?", [
-                  { text: "Cancel", style: "cancel" },
-                  {
-                    text: "Logout",
-                    style: "destructive",
-                    onPress: async () => {
-                      await logout(); /* AuthContext will update session and AppContent will switch to AuthStack */
-                    },
-                  },
-                ]);
-              }}
+              onPress={handleLogout}
               style={styles.logoutButton}
             >
+              <MaterialCommunityIcons name="logout" size={18} color="white" />
               <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* App Title */}
         <View style={styles.profileContainer}>
           <Text style={styles.title}>
             Intelligent Groundwater Management for India
           </Text>
         </View>
 
-        {/* Live Status */}
-        <View style={styles.liveBadge}>
-          <MaterialCommunityIcons
-            name="sync"
-            size={14}
-            color={COLORS.primary}
-          />
-          <Text style={styles.liveText}>
-            Live National aquifer status {formatLastUpdated()}
-          </Text>
-        </View>
 
-        {/* Menu Grid */}
+
         <View style={styles.gridContainer}>
           <View style={styles.gridRow}>
             <MenuButton
@@ -330,16 +290,6 @@ const WelcomeScreen = ({ navigation }) => {
             />
           </View>
         </View>
-
-        {/* Assistant Bot */}
-        <TouchableOpacity
-          style={styles.assistantButton}
-          onPress={handleNotImplemented}
-        >
-          <MaterialCommunityIcons name="robot" size={28} color={COLORS.white} />
-        </TouchableOpacity>
-
-        {/* Alert Modal */}
         <Modal
           visible={showAlertModal}
           transparent
@@ -402,6 +352,7 @@ const WelcomeScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+
   gradient: {
     flex: 1,
   },
@@ -454,41 +405,32 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   logoutButton: {
-    backgroundColor: "orange",
-    borderRadius: 20,
-    paddingVertical: 5,
-    paddingHorizontal: 15,
+    backgroundColor: COLORS.secondary,
+    borderRadius: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 3,
   },
   logoutText: {
     color: "white",
     fontWeight: "bold",
+    marginLeft: 8,
+    fontSize: 16,
   },
   profileContainer: {
-    marginTop: 10,
+    marginTop: 40,
     marginBottom: 10,
     alignItems: "center",
   },
   title: {
-    fontSize: 20,
+    fontSize: 32,
     fontWeight: "bold",
     color: COLORS.primary,
     textAlign: "center",
     marginBottom: 5,
-  },
-  liveBadge: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#90ee90",
-    borderRadius: 20,
-    paddingVertical: 8,
-    paddingHorizontal: 15,
-    alignSelf: "flex-start",
-    marginBottom: 10,
-  },
-  liveText: {
-    color: COLORS.primary,
-    fontSize: 14,
-    marginLeft: 10,
+    lineHeight: 40,
   },
   gridContainer: {
     flexDirection: "column",
@@ -570,23 +512,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.primary,
     marginRight: 5,
-  },
-  assistantButton: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-    backgroundColor: "#2ecc71",
-    borderRadius: 30,
-    width: 60,
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    elevation: 8,
-    shadowColor: "#2ecc71",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    zIndex: 10,
   },
   modalOverlay: {
     flex: 1,

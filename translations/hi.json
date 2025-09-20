@@ -1,0 +1,36 @@
+{
+  "farmerDashboard": {
+    "title": "किसान का डैशबोर्ड",
+    "nearestStation": "निकटतम स्टेशन डेटा",
+    "complaintForm": "शिकायत दर्ज करें",
+    "cropRecommendation": "फ़सल सिफ़ारिश"
+  },
+  "complaintForm": {
+    "nameLabel": "नाम",
+    "namePlaceholder": "अपना नाम दर्ज करें",
+    "contactLabel": "संपर्क",
+    "contactPlaceholder": "अपना संपर्क नंबर दर्ज करें",
+    "complaintLabel": "शिकायत",
+    "complaintPlaceholder": "अपनी शिकायत का वर्णन करें",
+    "submitButton": "शिकायत दर्ज करें",
+    "submitting": "सबमिट हो रहा है...",
+    "successTitle": "सफलता",
+    "successMessage": "आपकी शिकायत दर्ज कर दी गई है।",
+    "errorTitle": "त्रुटि",
+    "errorFillFields": "कृपया सभी फ़ील्ड भरें।"
+  },
+  "nearestStation": {
+    "finding": "आस-पास के स्टेशन ढूंढे जा रहे हैं...",
+    "permissionDenied": "अनुमति अस्वीकृत",
+    "permissionMessage": "आस-पास के स्टेशनों को खोजने के लिए कृपया अपनी डिवाइस सेटिंग्स में स्थान सेवाएं सक्षम करें।",
+    "errorLocation": "आपका स्थान प्राप्त करने में विफल। कृपया सुनिश्चित करें कि GPS सक्षम है।",
+    "errorFetch": "आस-पास के स्टेशन लाने में विफल।",
+    "stationsFound": "{{count}} स्टेशन पास में मिला",
+    "stationsFound_plural": "{{count}} स्टेशन पास में मिले",
+    "tryAgain": "पुनः प्रयास करें",
+    "noStations": "आपके आस-पास कोई जल स्टेशन नहीं मिला।",
+    "kmAway": "किमी दूर",
+    "waterLevel": "जल स्तर"
+  }
+}
+

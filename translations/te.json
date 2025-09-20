@@ -1,0 +1,35 @@
+{
+  "farmerDashboard": {
+    "title": "రైతు డ్యాష్‌బోర్డ్",
+    "nearestStation": "సమీప స్టేషన్ డేటా",
+    "complaintForm": "ఫిర్యాదు నమోదు చేయండి",
+    "cropRecommendation": "పంట సిఫారసు"
+  },
+  "complaintForm": {
+    "nameLabel": "పేరు",
+    "namePlaceholder": "మీ పేరు నమోదు చేయండి",
+    "contactLabel": "సంప్రదింపు",
+    "contactPlaceholder": "మీ సంప్రదింపు నంబర్ నమోదు చేయండి",
+    "complaintLabel": "ఫిర్యాదు",
+    "complaintPlaceholder": "మీ ఫిర్యాదు వివరించండి",
+    "submitButton": "ఫిర్యాదు నమోదు చేయండి",
+    "submitting": "సమర్పించబడుతోంది...",
+    "successTitle": "విజయం",
+    "successMessage": "మీ ఫిర్యాదు విజయవంతంగా నమోదు చేయబడింది.",
+    "errorTitle": "లోపం",
+    "errorFillFields": "దయచేసి అన్ని ఫీల్డ్స్ నింపండి."
+  },
+  "nearestStation": {
+    "finding": "సమీప స్టేషన్లు వెతుకుతున్నాం...",
+    "permissionDenied": "అనుమతి నిరాకరించబడింది",
+    "permissionMessage": "సమీప స్టేషన్లను కనుగొనడానికి మీ డివైస్ సెట్టింగ్స్‌లో లొకేషన్ సర్వీసులు ఆన్ చేయండి.",
+    "errorLocation": "మీ స్థానం పొందడంలో విఫలమైంది. దయచేసి GPS ఆన్ చేయబడి ఉందని నిర్ధారించుకోండి.",
+    "errorFetch": "సమీప స్టేషన్లను తెచ్చడంలో విఫలమైంది.",
+    "stationsFound": "{{count}} స్టేషన్ సమీపంలో కనుగొనబడింది",
+    "stationsFound_plural": "{{count}} స్టేషన్లు సమీపంలో కనుగొనబడ్డాయి",
+    "tryAgain": "మళ్లీ ప్రయత్నించండి",
+    "noStations": "మీ సమీపంలో ఏ నీటి స్టేషన్ కనుగొనబడలేదు.",
+    "kmAway": "కి.మీ దూరంలో",
+    "waterLevel": "నీటి మట్టం"
+  }
+}

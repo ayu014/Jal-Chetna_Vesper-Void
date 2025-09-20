@@ -4,6 +4,7 @@ import { ActivityIndicator, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { AuthStack, AppStack } from './navigation/AppNavigator';
+import { LanguageProvider } from './context/LanguageContext';
 
 const AppContent = () => {
   const { session, isLoading } = useAuth();
@@ -24,12 +25,24 @@ const AppContent = () => {
   );
 };
 
+// export default function App() {
+//   return (
+//     <SafeAreaProvider>
+//       <AuthProvider>
+//         <AppContent />
+//       </AuthProvider>
+//     </SafeAreaProvider>
+//   );
+// }
+
 export default function App() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <AppContent />
-      </AuthProvider>
+      <LanguageProvider> {/* Add the LanguageProvider here */}
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </LanguageProvider>
     </SafeAreaProvider>
   );
 }

@@ -1,0 +1,35 @@
+{
+  "farmerDashboard": {
+    "title": "Farmer's Dashboard",
+    "nearestStation": "Nearest Station Data",
+    "complaintForm": "Lodge a Complaint",
+    "cropRecommendation": "Crop Recommendation"
+  },
+  "complaintForm": {
+    "nameLabel": "Name",
+    "namePlaceholder": "Enter your name",
+    "contactLabel": "Contact",
+    "contactPlaceholder": "Enter your contact number",
+    "complaintLabel": "Complaint",
+    "complaintPlaceholder": "Describe your complaint",
+    "submitButton": "Submit Complaint",
+    "submitting": "Submitting...",
+    "successTitle": "Success",
+    "successMessage": "Your complaint has been submitted.",
+    "errorTitle": "Error",
+    "errorFillFields": "Please fill all fields."
+  },
+  "nearestStation": {
+    "finding": "Finding nearby stations...",
+    "permissionDenied": "Permission Denied",
+    "permissionMessage": "Please enable location services in your settings to find nearby stations.",
+    "errorLocation": "Failed to get your location. Please ensure GPS is enabled.",
+    "errorFetch": "Failed to fetch nearby stations.",
+    "stationsFound": "{{count}} station found nearby",
+    "stationsFound_plural": "{{count}} stations found nearby",
+    "tryAgain": "Try Again",
+    "noStations": "No water stations found in your immediate area.",
+    "kmAway": "km away",
+    "waterLevel": "Water Level"
+  }
+}

@@ -16,11 +16,13 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useAuth } from "../../context/AuthContext";
+import { useLanguage } from "../../context/LanguageContext";
 import { COLORS } from "../../constants/colors";
 import { useNavigation } from "@react-navigation/native";
 
 const LoginScreen = () => {
   const { login } = useAuth();
+  const { setLocale } = useLanguage();
   const navigation = useNavigation();
 
   const [email, setEmail] = useState("");
@@ -59,7 +61,17 @@ const LoginScreen = () => {
   };
 
   const onSelectLanguage = (language) => {
-    console.log(`${language} selected`);
+    const localeMap = {
+      English: 'en',
+      Hindi: 'hi',
+      Punjabi: 'pa',
+      Tamil: 'ta',
+      Telugu: 'te',
+    };
+    const langCode = localeMap[language] || 'en';
+    
+    setLocale(langCode);
+    
     setLanguageModalVisible(false);
     navigation.navigate("FarmerDashboard");
   };
@@ -113,6 +125,7 @@ const LoginScreen = () => {
             ]}
           >
             <View style={styles.centeredWrapper}>
+
               <View style={styles.logoPlaceholder}>
                 <Image
                   source={require("../../assets/images/logo.jpg")}

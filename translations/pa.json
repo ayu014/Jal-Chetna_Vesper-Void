@@ -1,0 +1,35 @@
+{
+  "farmerDashboard": {
+    "title": "ਕਿਸਾਨ ਡੈਸ਼ਬੋਰਡ",
+    "nearestStation": "ਨੇੜਲੇ ਸਟੇਸ਼ਨ ਦਾ ਡਾਟਾ",
+    "complaintForm": "ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰੋ",
+    "cropRecommendation": "ਫ਼ਸਲ ਦੀ ਸਿਫ਼ਾਰਸ਼"
+  },
+  "complaintForm": {
+    "nameLabel": "ਨਾਂ",
+    "namePlaceholder": "ਆਪਣਾ ਨਾਂ ਦਰਜ ਕਰੋ",
+    "contactLabel": "ਸੰਪਰਕ",
+    "contactPlaceholder": "ਆਪਣਾ ਸੰਪਰਕ ਨੰਬਰ ਦਰਜ ਕਰੋ",
+    "complaintLabel": "ਸ਼ਿਕਾਇਤ",
+    "complaintPlaceholder": "ਆਪਣੀ ਸ਼ਿਕਾਇਤ ਦਾ ਵੇਰਵਾ ਦਿਓ",
+    "submitButton": "ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰੋ",
+    "submitting": "ਦਰਜ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+    "successTitle": "ਸਫਲਤਾ",
+    "successMessage": "ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰ ਲਈ ਗਈ ਹੈ।",
+    "errorTitle": "ਗਲਤੀ",
+    "errorFillFields": "ਕਿਰਪਾ ਕਰਕੇ ਸਾਰੇ ਫ਼ੀਲਡ ਭਰੋ।"
+  },
+  "nearestStation": {
+    "finding": "ਨੇੜਲੇ ਸਟੇਸ਼ਨ ਲੱਭੇ ਜਾ ਰਹੇ ਹਨ...",
+    "permissionDenied": "ਇਜਾਜ਼ਤ ਰੱਦ ਕੀਤੀ ਗਈ",
+    "permissionMessage": "ਨੇੜਲੇ ਸਟੇਸ਼ਨ ਲੱਭਣ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਡਿਵਾਈਸ ਸੈਟਿੰਗਾਂ ਵਿੱਚ ਸਥਾਨ ਸੇਵਾਵਾਂ ਐਨੇਬਲ ਕਰੋ।",
+    "errorLocation": "ਤੁਹਾਡਾ ਸਥਾਨ ਪ੍ਰਾਪਤ ਕਰਨ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਯਕੀਨੀ ਬਣਾਓ ਕਿ GPS ਚਾਲੂ ਹੈ।",
+    "errorFetch": "ਨੇੜਲੇ ਸਟੇਸ਼ਨ ਲਿਆਉਣ ਵਿੱਚ ਅਸਫਲ।",
+    "stationsFound": "{{count}} ਸਟੇਸ਼ਨ ਨੇੜੇ ਮਿਲਿਆ",
+    "stationsFound_plural": "{{count}} ਸਟੇਸ਼ਨ ਨੇੜੇ ਮਿਲੇ",
+    "tryAgain": "ਮੁੜ ਕੋਸ਼ਿਸ਼ ਕਰੋ",
+    "noStations": "ਤੁਹਾਡੇ ਨੇੜੇ ਕੋਈ ਪਾਣੀ ਸਟੇਸ਼ਨ ਨਹੀਂ ਮਿਲਿਆ।",
+    "kmAway": "ਕਿਮੀ ਦੂਰ",
+    "waterLevel": "ਪਾਣੀ ਪੱਧਰ"
+  }
+}

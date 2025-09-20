@@ -1,0 +1,35 @@
+{
+  "farmerDashboard": {
+    "title": "விவசாயி டாஷ்போர்ட்",
+    "nearestStation": "அருகிலுள்ள நிலைய தரவு",
+    "complaintForm": "புகார் பதிவு செய்யவும்",
+    "cropRecommendation": "பயிர் பரிந்துரை"
+  },
+  "complaintForm": {
+    "nameLabel": "பெயர்",
+    "namePlaceholder": "உங்கள் பெயரை உள்ளிடவும்",
+    "contactLabel": "தொடர்பு",
+    "contactPlaceholder": "உங்கள் தொடர்பு எண்ணை உள்ளிடவும்",
+    "complaintLabel": "புகார்",
+    "complaintPlaceholder": "உங்கள் புகாரை விவரிக்கவும்",
+    "submitButton": "புகார் பதிவு செய்யவும்",
+    "submitting": "சமர்ப்பிக்கப்படுகிறது...",
+    "successTitle": "வெற்றி",
+    "successMessage": "உங்கள் புகார் பதிவு செய்யப்பட்டது.",
+    "errorTitle": "பிழை",
+    "errorFillFields": "தயவுசெய்து அனைத்து புலங்களையும் நிரப்பவும்."
+  },
+  "nearestStation": {
+    "finding": "அருகிலுள்ள நிலையங்களை தேடுகிறது...",
+    "permissionDenied": "அனுமதி மறுக்கப்பட்டது",
+    "permissionMessage": "அருகிலுள்ள நிலையங்களை கண்டறிய உங்கள் சாதன அமைப்புகளில் இடம் சேவைகளை இயக்கவும்.",
+    "errorLocation": "உங்கள் இருப்பிடத்தை பெற முடியவில்லை. GPS இயக்கப்பட்டிருப்பதை உறுதிப்படுத்தவும்.",
+    "errorFetch": "அருகிலுள்ள நிலையங்களை எடுக்க முடியவில்லை.",
+    "stationsFound": "{{count}} நிலையம் அருகில் கண்டறியப்பட்டது",
+    "stationsFound_plural": "{{count}} நிலையங்கள் அருகில் கண்டறியப்பட்டன",
+    "tryAgain": "மீண்டும் முயற்சிக்கவும்",
+    "noStations": "உங்கள் அருகில் எந்த நீர் நிலையமும் இல்லை.",
+    "kmAway": "கிமீ தூரத்தில்",
+    "waterLevel": "நீர்மட்டம்"
+  }
+}
