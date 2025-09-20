@@ -5,8 +5,18 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-// The prompt no longer includes water level
-const createPrompt = (latitude: number, longitude: number) => {
+// CHANGED: The prompt now accepts a language code (locale)
+const createPrompt = (latitude: number, longitude: number, locale: string) => {
+  // Map the 2-letter code to the full language name for a clearer prompt
+  const languageMap = {
+    en: 'English',
+    hi: 'Hindi',
+    pa: 'Punjabi',
+    ta: 'Tamil',
+    te: 'Telugu',
+  };
+  const languageName = languageMap[locale] || 'English';
+
   return `
     You are an agricultural expert for India, specifically for the region around Haryana and Punjab. A farmer at latitude ${latitude}, longitude ${longitude} needs a crop recommendation.
     Key information:
@@ -14,6 +24,7 @@ const createPrompt = (latitude: number, longitude: number) => {
     Based on this location and season, recommend 3 suitable crops for the upcoming Rabi season. 
     For each crop, provide a short, simple reason.
     Also, recommend one popular crop to AVOID in this region and explain why.
+    IMPORTANT: Provide the entire JSON response translated into the ${languageName} language.
     Provide the response ONLY in this exact JSON format, with no extra text or markdown formatting:
     {
       "recommended": [
@@ -32,16 +43,19 @@ serve(async (req) => {
   }
 
   try {
-    // It now only needs latitude and longitude from the app
-    const { latitude, longitude } = await req.json();
-    if (!latitude || !longitude) throw new Error("Latitude and longitude are required.");
+    // CHANGED: It now also expects a 'locale' property from the app
+    const { latitude, longitude, locale } = await req.json();
+    if (!latitude || !longitude || !locale) {
+      throw new Error("Latitude, longitude, and locale are required.");
+    }
     
     const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY");
     if (!GEMINI_API_KEY) throw new Error("Missing GEMINI_API_KEY secret.");
     
     const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-    // The prompt is now simpler
-    const prompt = createPrompt(latitude, longitude);
+    
+    // CHANGED: We pass the locale to the prompt creator
+    const prompt = createPrompt(latitude, longitude, locale);
 
     const geminiResponse = await fetch(geminiUrl, {
       method: "POST",

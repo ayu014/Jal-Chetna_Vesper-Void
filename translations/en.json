@@ -3,7 +3,7 @@
     "title": "Farmer's Dashboard",
     "nearestStation": "Nearest Station Data",
     "complaintForm": "Lodge a Complaint",
-    "cropRecommendation": "Crop Recommendation"
+    "cropRecommendation": "AI Crop Advisor"
   },
   "complaintForm": {
     "nameLabel": "Name",
@@ -31,5 +31,11 @@
     "noStations": "No water stations found in your immediate area.",
     "kmAway": "km away",
     "waterLevel": "Water Level"
+  },
+  "cropRecommendation": {
+    "analyzing": "Analyzing Local Data for Crop Recommendation...",
+    "error": "Could not fetch recommendation. Please try again later.",
+    "recommendedCrops": "Recommended Crops",
+    "avoidCrop": "Crop to Avoid"
   }
 }

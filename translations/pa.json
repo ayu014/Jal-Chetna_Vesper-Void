@@ -3,7 +3,7 @@
     "title": "ਕਿਸਾਨ ਡੈਸ਼ਬੋਰਡ",
     "nearestStation": "ਨੇੜਲੇ ਸਟੇਸ਼ਨ ਦਾ ਡਾਟਾ",
     "complaintForm": "ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰੋ",
-    "cropRecommendation": "ਫ਼ਸਲ ਦੀ ਸਿਫ਼ਾਰਸ਼"
+    "cropRecommendation": "ਏਆਈ ਫ਼ਸਲ ਸਲਾਹਕਾਰ"
   },
   "complaintForm": {
     "nameLabel": "ਨਾਂ",
@@ -31,5 +31,11 @@
     "noStations": "ਤੁਹਾਡੇ ਨੇੜੇ ਕੋਈ ਪਾਣੀ ਸਟੇਸ਼ਨ ਨਹੀਂ ਮਿਲਿਆ।",
     "kmAway": "ਕਿਮੀ ਦੂਰ",
     "waterLevel": "ਪਾਣੀ ਪੱਧਰ"
+  },
+  "cropRecommendation": {
+    "analyzing": "ਫ਼ਸਲ ਦੀ ਸਿਫਾਰਸ਼ ਲਈ ਸਥਾਨਕ ਡਾਟਾ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
+    "error": "ਸਿਫਾਰਸ਼ ਲਿਆਉਣ ਵਿੱਚ ਅਸਫਲ। ਕਿਰਪਾ ਕਰਕੇ ਬਾਅਦ ਵਿੱਚ ਕੋਸ਼ਿਸ਼ ਕਰੋ।",
+    "recommendedCrops": "ਸਿਫਾਰਸ਼ ਕੀਤੀਆਂ ਫ਼ਸਲਾਂ",
+    "avoidCrop": "ਇਸ ਫ਼ਸਲ ਤੋਂ ਬਚੋ"
   }
 }

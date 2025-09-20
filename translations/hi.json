@@ -3,7 +3,7 @@
     "title": "किसान का डैशबोर्ड",
     "nearestStation": "निकटतम स्टेशन डेटा",
     "complaintForm": "शिकायत दर्ज करें",
-    "cropRecommendation": "फ़सल सिफ़ारिश"
+    "cropRecommendation": "एआई फसल सलाहकार"
   },
   "complaintForm": {
     "nameLabel": "नाम",
@@ -11,7 +11,7 @@
     "contactLabel": "संपर्क",
     "contactPlaceholder": "अपना संपर्क नंबर दर्ज करें",
     "complaintLabel": "शिकायत",
-    "complaintPlaceholder": "अपनी शिकायत का वर्णन करें",
+    "complaintPlaceholder": " अपनी शिकायत का वर्णन करें",
     "submitButton": "शिकायत दर्ज करें",
     "submitting": "सबमिट हो रहा है...",
     "successTitle": "सफलता",
@@ -31,6 +31,11 @@
     "noStations": "आपके आस-पास कोई जल स्टेशन नहीं मिला।",
     "kmAway": "किमी दूर",
     "waterLevel": "जल स्तर"
+  },
+  "cropRecommendation": {
+    "analyzing": "फसल की सिफारिश के लिए स्थानीय डेटा का विश्लेषण किया जा रहा है...",
+    "error": "सिफारिश लाने में विफल। कृपया बाद में पुनः प्रयास करें।",
+    "recommendedCrops": "अनुशंसित फसलें",
+    "avoidCrop": "इस फसल से बचें"
   }
 }
-

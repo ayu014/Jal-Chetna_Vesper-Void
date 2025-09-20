@@ -3,7 +3,7 @@
     "title": "రైతు డ్యాష్‌బోర్డ్",
     "nearestStation": "సమీప స్టేషన్ డేటా",
     "complaintForm": "ఫిర్యాదు నమోదు చేయండి",
-    "cropRecommendation": "పంట సిఫారసు"
+    "cropRecommendation": "ఏఐ పంట సలహాదారు"
   },
   "complaintForm": {
     "nameLabel": "పేరు",
@@ -31,5 +31,11 @@
     "noStations": "మీ సమీపంలో ఏ నీటి స్టేషన్ కనుగొనబడలేదు.",
     "kmAway": "కి.మీ దూరంలో",
     "waterLevel": "నీటి మట్టం"
+  },
+  "cropRecommendation": {
+    "analyzing": "పంట సిఫారసు కోసం స్థానిక డేటాను విశ్లేషిస్తున్నాం...",
+    "error": "సిఫారసు తెచ్చడంలో విఫలమైంది. దయచేసి తరువాత ప్రయత్నించండి.",
+    "recommendedCrops": "సిఫారసు చేసిన పంటలు",
+    "avoidCrop": "ఈ పంటను నివారించండి"
   }
 }
