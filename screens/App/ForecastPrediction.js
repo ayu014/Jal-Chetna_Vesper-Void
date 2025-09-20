@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -7,122 +7,185 @@ import {
   SafeAreaView,
   StatusBar,
   ScrollView,
-} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // or your preferred icon library
+} from "react-native";
+import Icon from "react-native-vector-icons/MaterialIcons"; // Using MaterialIcons for a consistent look
 
 const DistrictsScreen = ({ navigation }) => {
+  // Added an 'icon' property to each district for better visual distinction
   const districts = [
-    { id: '1', name: 'Sangrur', description: 'District Sangrur Information' },
-    { id: '2', name: 'Ludhiana', description: 'District Ludhiana Information' },
-    { id: '3', name: 'Amritsar', description: 'District Amritsar Information' },
+    {
+      id: "1",
+      name: "Sangrur",
+      description: "View water station data",
+      icon: "water",
+    },
+    {
+      id: "2",
+      name: "Ludhiana",
+      description: "Explore groundwater levels",
+      icon: "waves",
+    },
+    {
+      id: "3",
+      name: "Amritsar",
+      description: "Check monitoring stations",
+      icon: "location-city",
+    },
   ];
 
-const handleDistrictPress = (district) => {
-  // Change this line
-  navigation.navigate('StationList', { districtName: district.name });
-};
+  const handleDistrictPress = (district) => {
+    // This core logic remains unchanged
+    navigation.navigate("StationList", { districtName: district.name });
+  };
 
   const renderDistrictItem = (district) => (
     <TouchableOpacity
       key={district.id}
       style={styles.districtCard}
       onPress={() => handleDistrictPress(district)}
-      activeOpacity={0.7}
+      activeOpacity={0.8}
     >
-      <View style={styles.cardContent}>
-        <View style={styles.leftContent}>
-          <Text style={styles.districtName}>{district.name}</Text>
-          <Text style={styles.districtDescription}>{district.description}</Text>
-        </View>
-        <View style={styles.rightContent}>
-          <Icon name="chevron-right" size={24} color="#666" />
-        </View>
+      {/* Card Icon */}
+      <View
+        style={[
+          styles.cardIconContainer,
+          { backgroundColor: COLORS.primaryFaded },
+        ]}
+      >
+        <Icon name={district.icon} size={28} color={COLORS.primary} />
       </View>
+
+      {/* Card Text Content */}
+      <View style={styles.cardTextContainer}>
+        <Text style={styles.districtName}>{district.name}</Text>
+        <Text style={styles.districtDescription}>{district.description}</Text>
+      </View>
+
+      {/* Chevron Icon */}
+      <Icon name="chevron-right" size={28} color={COLORS.textSecondary} />
     </TouchableOpacity>
   );
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#4A90E2" barStyle="light-content" />
+      <StatusBar backgroundColor={COLORS.background} barStyle="dark-content" />
 
       {/* Header */}
-      {/* <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Icon name="arrow-back" size={24} color="#fff" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Select District</Text>
-      </View> */}
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerTitle}>Select a District</Text>
+        <Text style={styles.headerSubtitle}>
+          Choose a district to see detailed information
+        </Text>
+      </View>
 
-      {/* Search Bar */}
+      {/* Search Bar (Visual Placeholder) */}
       <View style={styles.searchContainer}>
-        <View style={styles.searchBar}>
-          <Icon name="search" size={20} color="#999" style={styles.searchIcon} />
-          <Text style={styles.searchPlaceholder}>Search</Text>
-        </View>
+        <Icon name="search" size={22} color={COLORS.textSecondary} />
+        <Text style={styles.searchPlaceholder}>Search for a district...</Text>
       </View>
 
       {/* Districts List */}
-      <ScrollView style={styles.listContainer}>
-        {districts.map(district => renderDistrictItem(district))}
+      <ScrollView
+        style={styles.listContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        {districts.map((district) => renderDistrictItem(district))}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
+// --- MODERN STYLESHEET ---
+
+// A modern color palette for a fresh look
+const COLORS = {
+  primary: "#007AFF", // A vibrant blue
+  primaryFaded: "#E6F2FF", // A light, faded blue for backgrounds
+  background: "#F2F2F7", // iOS-style light grey background
+  white: "#FFFFFF",
+  text: "#1C1C1E", // Dark, primary text color
+  textSecondary: "#8A8A8E", // Lighter grey for descriptions and placeholders
+  border: "#DCDCDC", // Light grey for borders
+};
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f5f5f5' },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#4A90E2',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+  container: {
+    flex: 1,
+    backgroundColor: COLORS.background,
   },
-  backButton: { padding: 8, marginRight: 8 },
-  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
+  // Header Styles
+  headerContainer: {
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10,
+  },
+  headerTitle: {
+    fontSize: 32,
+    fontWeight: "bold",
+    color: COLORS.text,
+  },
+  headerSubtitle: {
+    fontSize: 16,
+    color: COLORS.textSecondary,
+    marginTop: 4,
+  },
+  // Search Bar Styles
   searchContainer: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-  },
-  searchBar: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f8f8f8',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderWidth: 1,
-    borderColor: '#e0e0e0',
-  },
-  searchIcon: { marginRight: 8 },
-  searchPlaceholder: { fontSize: 16, color: '#999', flex: 1 },
-  listContainer: { flex: 1, paddingHorizontal: 16, paddingTop: 16 },
-  districtCard: {
-    backgroundColor: '#fff',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: COLORS.white,
     borderRadius: 12,
-    marginBottom: 12,
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.22,
-    shadowRadius: 2.22,
+    marginHorizontal: 20,
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
-  cardContent: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 20 },
-  leftContent: { flex: 1 },
-  rightContent: { justifyContent: 'center', alignItems: 'center' },
-  districtName: { fontSize: 18, fontWeight: '600', color: '#333', marginBottom: 4 },
-  districtDescription: { fontSize: 14, color: '#666', lineHeight: 20 },
+  searchPlaceholder: {
+    fontSize: 16,
+    color: COLORS.textSecondary,
+    marginLeft: 10,
+  },
+  // List Styles
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
+  // District Card Styles
+  districtCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: COLORS.white,
+    borderRadius: 16,
+    padding: 15,
+    marginBottom: 16,
+    // Soft shadow for a floating effect
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
+    elevation: 3, // for Android
+  },
+  cardIconContainer: {
+    padding: 12,
+    borderRadius: 12,
+    marginRight: 15,
+  },
+  cardTextContainer: {
+    flex: 1, // Allows text to take up available space
+  },
+  districtName: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: COLORS.text,
+  },
+  districtDescription: {
+    fontSize: 14,
+    color: COLORS.textSecondary,
+    marginTop: 2,
+  },
 });
 
 export default DistrictsScreen;

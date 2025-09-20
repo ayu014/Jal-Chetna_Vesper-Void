@@ -1,17 +1,27 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert, ScrollView, Image, Modal } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Audio } from 'expo-av';
-import { COLORS } from '../../constants/colors';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Alert,
+  ScrollView,
+  Image,
+  Modal,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
+import { Audio } from "expo-av";
+import { COLORS } from "../../constants/colors";
+import { useAuth } from "../../context/AuthContext";
 
 // Try to import supabase, but provide a fallback if it fails
 let supabase;
 try {
-  supabase = require('../../services/supabase').supabase;
+  supabase = require("../../services/supabase").supabase;
 } catch (error) {
-  console.warn('Supabase client not found, using mock data instead');
+  console.warn("Supabase client not found, using mock data instead");
   supabase = null;
 }
 
@@ -27,7 +37,11 @@ const MenuButton = ({ title, icon, onPress, description, chevronText }) => (
     </View>
     <View style={styles.chevronContainer}>
       <Text style={styles.chevronText}>{chevronText}</Text>
-      <MaterialCommunityIcons name="chevron-right" size={20} color={COLORS.primary} />
+      <MaterialCommunityIcons
+        name="chevron-right"
+        size={20}
+        color={COLORS.primary}
+      />
     </View>
   </TouchableOpacity>
 );
@@ -44,13 +58,22 @@ const WideMenuButton = ({ title, icon, onPress, description, chevronText }) => (
     </View>
     <View style={styles.chevronContainer}>
       <Text style={styles.chevronText}>{chevronText}</Text>
-      <MaterialCommunityIcons name="chevron-right" size={20} color={COLORS.primary} />
+      <MaterialCommunityIcons
+        name="chevron-right"
+        size={20}
+        color={COLORS.primary}
+      />
     </View>
   </TouchableOpacity>
 );
 
 const WelcomeScreen = ({ navigation }) => {
-  const user = { firstName: 'Aarav', lastName: 'Sharma', designation: 'Executive Engineer' };
+  const { logout } = useAuth();
+  const user = {
+    firstName: "Aarav",
+    lastName: "Sharma",
+    designation: "Executive Engineer",
+  };
 
   const [lastUpdated, setLastUpdated] = useState(null);
   const [isDataOutdated, setIsDataOutdated] = useState(false);
@@ -68,7 +91,9 @@ const WelcomeScreen = ({ navigation }) => {
   // Play alarm
   async function playAlarm() {
     try {
-      const { sound } = await Audio.Sound.createAsync(require('../../assets/sound/alarmclock.mp3'));
+      const { sound } = await Audio.Sound.createAsync(
+        require("../../assets/sound/alarmclock.mp3")
+      );
       setSound(sound);
       await sound.playAsync();
       setShowAlertModal(true);
@@ -78,7 +103,7 @@ const WelcomeScreen = ({ navigation }) => {
         setShowAlertModal(false);
       }, 30000);
     } catch (error) {
-      console.warn('Could not play alarm sound:', error);
+      console.warn("Could not play alarm sound:", error);
       setShowAlertModal(true);
     }
   }
@@ -103,10 +128,26 @@ const WelcomeScreen = ({ navigation }) => {
   };
 
   const getMockProblemStations = () => [
-    { stationCode: 'AMR001', stationName: 'Amritsar Central', lastUpdated: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000) },
-    { stationCode: 'AMR005', stationName: 'Amritsar North', lastUpdated: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000) },
-    { stationCode: 'AMR008', stationName: 'Amritsar West', lastUpdated: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000) },
-    { stationCode: 'AMR012', stationName: 'Amritsar South', lastUpdated: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000) }
+    {
+      stationCode: "AMR001",
+      stationName: "Amritsar Central",
+      lastUpdated: new Date(Date.now() - 11 * 24 * 60 * 60 * 1000),
+    },
+    {
+      stationCode: "AMR005",
+      stationName: "Amritsar North",
+      lastUpdated: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000),
+    },
+    {
+      stationCode: "AMR008",
+      stationName: "Amritsar West",
+      lastUpdated: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000),
+    },
+    {
+      stationCode: "AMR012",
+      stationName: "Amritsar South",
+      lastUpdated: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000),
+    },
   ];
 
   const mockCheckDataFreshness = () => {
@@ -132,18 +173,22 @@ const WelcomeScreen = ({ navigation }) => {
     if (!supabase) return mockCheckDataFreshness();
     try {
       const { data, error } = await supabase
-        .from('amritsar_daily_summary')
-        .select('stationCode, stationName, last_updated')
-        .order('last_updated', { ascending: false });
+        .from("amritsar_daily_summary")
+        .select("stationCode, stationName, last_updated")
+        .order("last_updated", { ascending: false });
 
       if (error) return mockCheckDataFreshness();
 
       if (data && data.length > 0 && !isManualAlarm) {
-        const latestUpdate = new Date(Math.max(...data.map(item => new Date(item.last_updated))));
+        const latestUpdate = new Date(
+          Math.max(...data.map((item) => new Date(item.last_updated)))
+        );
         setLastUpdated(latestUpdate);
         const tenDaysAgo = new Date();
         tenDaysAgo.setDate(tenDaysAgo.getDate() - 10);
-        const outdatedStations = data.filter(station => new Date(station.last_updated) < tenDaysAgo);
+        const outdatedStations = data.filter(
+          (station) => new Date(station.last_updated) < tenDaysAgo
+        );
         if (outdatedStations.length > 0 || latestUpdate < tenDaysAgo) {
           setIsDataOutdated(true);
           setProblemStations(outdatedStations);
@@ -178,8 +223,8 @@ const WelcomeScreen = ({ navigation }) => {
   }, []);
 
   const formatLastUpdated = () => {
-    if (isCheckingData) return 'Checking data...';
-    if (!lastUpdated) return 'No data available';
+    if (isCheckingData) return "Checking data...";
+    if (!lastUpdated) return "No data available";
     const now = new Date();
     const diffMins = Math.floor((now - lastUpdated) / 60000);
     const diffHrs = Math.floor(diffMins / 60);
@@ -190,22 +235,49 @@ const WelcomeScreen = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient colors={['#e0f7fa', '#e0f7fa']} style={styles.gradient}>
-      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+    <LinearGradient colors={["#e0f7fa", "#e0f7fa"]} style={styles.gradient}>
+      <SafeAreaView style={styles.container} edges={["top", "left", "right"]}>
         {/* Header */}
         <View style={styles.header}>
           <View style={styles.userInfoHeader}>
-            <Image source={require('../../assets/images/logo.jpg')} style={styles.appLogo} resizeMode="contain"/>
+            <Image
+              source={require("../../assets/images/logo.jpg")}
+              style={styles.appLogo}
+              resizeMode="contain"
+            />
             <View style={styles.userHeaderInfo}>
-              <Text style={styles.userNameHeader}>{user.firstName} {user.lastName}</Text>
+              <Text style={styles.userNameHeader}>
+                {user.firstName} {user.lastName}
+              </Text>
               <Text style={styles.userDesignation}>{user.designation}</Text>
             </View>
           </View>
           <View style={styles.headerRight}>
-            <TouchableOpacity onPress={triggerManualAlarm} style={styles.testAlarmButton}>
-              <MaterialCommunityIcons name="alarm" size={20} color={COLORS.white} />
+            <TouchableOpacity
+              onPress={triggerManualAlarm}
+              style={styles.testAlarmButton}
+            >
+              <MaterialCommunityIcons
+                name="alarm"
+                size={20}
+                color={COLORS.white}
+              />
             </TouchableOpacity>
-            <TouchableOpacity onPress={handleNotImplemented} style={styles.logoutButton}>
+            <TouchableOpacity
+              onPress={() => {
+                Alert.alert("Logout", "Are you sure you want to logout?", [
+                  { text: "Cancel", style: "cancel" },
+                  {
+                    text: "Logout",
+                    style: "destructive",
+                    onPress: async () => {
+                      await logout(); /* AuthContext will update session and AppContent will switch to AuthStack */
+                    },
+                  },
+                ]);
+              }}
+              style={styles.logoutButton}
+            >
               <Text style={styles.logoutText}>Logout</Text>
             </TouchableOpacity>
           </View>
@@ -213,38 +285,46 @@ const WelcomeScreen = ({ navigation }) => {
 
         {/* App Title */}
         <View style={styles.profileContainer}>
-          <Text style={styles.title}>Intelligent Groundwater Management for India</Text>
+          <Text style={styles.title}>
+            Intelligent Groundwater Management for India
+          </Text>
         </View>
 
         {/* Live Status */}
         <View style={styles.liveBadge}>
-          <MaterialCommunityIcons name="sync" size={14} color={COLORS.primary} />
-          <Text style={styles.liveText}>Live National aquifer status {formatLastUpdated()}</Text>
+          <MaterialCommunityIcons
+            name="sync"
+            size={14}
+            color={COLORS.primary}
+          />
+          <Text style={styles.liveText}>
+            Live National aquifer status {formatLastUpdated()}
+          </Text>
         </View>
 
         {/* Menu Grid */}
         <View style={styles.gridContainer}>
           <View style={styles.gridRow}>
-            <MenuButton 
-              title="GIS Dashboard" 
+            <MenuButton
+              title="GIS Dashboard"
               icon="map-outline"
-              onPress={() => navigation.navigate('Dashboard')} 
+              onPress={() => navigation.navigate("Dashboard")}
               description="Explore wells, aquifers, layers across districts."
               chevronText="Open"
             />
-            <MenuButton 
-              title="Alerts" 
+            <MenuButton
+              title="Alerts"
               icon="bell-outline"
-              onPress={() => navigation.navigate('Alerts')}
+              onPress={() => navigation.navigate("Alerts")}
               description="Get notified on threshold breaches and risks."
               chevronText="View"
             />
           </View>
           <View style={styles.singleButtonRow}>
-            <WideMenuButton 
-              title="Forecast & Prediction" 
+            <WideMenuButton
+              title="Forecast & Prediction"
               icon="chart-line"
-              onPress={() => navigation.navigate('Prediction')}
+              onPress={() => navigation.navigate("Prediction")}
               description="Short-term forecasts and long-range predictive analytics."
               chevronText="Explore"
             />
@@ -252,39 +332,70 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
 
         {/* Assistant Bot */}
-        <TouchableOpacity style={styles.assistantButton} onPress={handleNotImplemented}>
+        <TouchableOpacity
+          style={styles.assistantButton}
+          onPress={handleNotImplemented}
+        >
           <MaterialCommunityIcons name="robot" size={28} color={COLORS.white} />
         </TouchableOpacity>
 
         {/* Alert Modal */}
-        <Modal visible={showAlertModal} transparent animationType="fade" onRequestClose={stopAlarm}>
+        <Modal
+          visible={showAlertModal}
+          transparent
+          animationType="fade"
+          onRequestClose={stopAlarm}
+        >
           <View style={styles.modalOverlay}>
             <View style={styles.modalContainer}>
               <View style={styles.modalHeader}>
                 <Text style={styles.modalTitle}>Sensor Alert!</Text>
-                <TouchableOpacity onPress={stopAlarm} style={styles.closeButton}>
-                  <MaterialCommunityIcons name="close" size={24} color={COLORS.primary} />
+                <TouchableOpacity
+                  onPress={stopAlarm}
+                  style={styles.closeButton}
+                >
+                  <MaterialCommunityIcons
+                    name="close"
+                    size={24}
+                    color={COLORS.primary}
+                  />
                 </TouchableOpacity>
               </View>
               <View style={styles.modalContent}>
-                <MaterialCommunityIcons name="alert-octagon" size={50} color="#ff6b6b" style={styles.modalIcon}/>
-                <Text style={styles.modalMessage}>{isManualAlarm ? 'Test Alert: ' : ''}Sensors have stopped working at multiple stations!</Text>
+                <MaterialCommunityIcons
+                  name="alert-octagon"
+                  size={50}
+                  color="#ff6b6b"
+                  style={styles.modalIcon}
+                />
+                <Text style={styles.modalMessage}>
+                  {isManualAlarm ? "Test Alert: " : ""}Sensors have stopped
+                  working at multiple stations!
+                </Text>
                 <ScrollView style={styles.modalStationList}>
-                  {problemStations.slice(0,3).map((station,index)=>(
+                  {problemStations.slice(0, 3).map((station, index) => (
                     <View key={index} style={styles.modalStationItem}>
-                      <MaterialCommunityIcons name="water-pump" size={16} color={COLORS.primary}/>
-                      <Text style={styles.modalStationText}>{station.stationCode} - {station.stationName}</Text>
+                      <MaterialCommunityIcons
+                        name="water-pump"
+                        size={16}
+                        color={COLORS.primary}
+                      />
+                      <Text style={styles.modalStationText}>
+                        {station.stationCode} - {station.stationName}
+                      </Text>
                     </View>
                   ))}
                 </ScrollView>
-                <TouchableOpacity onPress={stopAlarm} style={styles.modalActionButton}>
+                <TouchableOpacity
+                  onPress={stopAlarm}
+                  style={styles.modalActionButton}
+                >
                   <Text style={styles.modalActionText}>Acknowledged</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
         </Modal>
-
       </SafeAreaView>
     </LinearGradient>
   );
@@ -297,18 +408,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 10,
-    backgroundColor: '#e0f7fa',
+    backgroundColor: "#e0f7fa",
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingTop: 15,
     paddingBottom: 10,
   },
   userInfoHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
   },
   appLogo: {
@@ -317,61 +428,61 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   userHeaderInfo: {
-    flexDirection: 'column',
+    flexDirection: "column",
   },
   userNameHeader: {
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: COLORS.primary,
   },
   userDesignation: {
     fontSize: 14,
     color: COLORS.primary,
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   testAlarmButton: {
-    backgroundColor: 'red',
+    backgroundColor: "red",
     borderRadius: 20,
     width: 40,
     height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 10,
   },
   logoutButton: {
-    backgroundColor: 'orange',
+    backgroundColor: "orange",
     borderRadius: 20,
     paddingVertical: 5,
     paddingHorizontal: 15,
   },
   logoutText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
   profileContainer: {
     marginTop: 10,
     marginBottom: 10,
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: COLORS.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: 5,
   },
   liveBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#90ee90',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#90ee90",
     borderRadius: 20,
     paddingVertical: 8,
     paddingHorizontal: 15,
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     marginBottom: 10,
   },
   liveText: {
@@ -380,46 +491,46 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   gridContainer: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
     flex: 1,
   },
   gridRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
     marginBottom: 20,
   },
   singleButtonRow: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "center",
+    width: "100%",
     marginBottom: 10,
   },
   menuButton: {
-    width: '48%',
-    backgroundColor: 'white',
+    width: "48%",
+    backgroundColor: "white",
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 10,
     elevation: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4},
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 12,
   },
   wideMenuButton: {
-    width: '70%',
-    backgroundColor: 'white',
+    width: "70%",
+    backgroundColor: "white",
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     padding: 15,
     elevation: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4},
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 12,
   },
@@ -428,31 +539,31 @@ const styles = StyleSheet.create({
     height: 70,
     borderRadius: 35,
     backgroundColor: COLORS.primary,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 20,
   },
   menuButtonContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   menuButtonText: {
     fontSize: 16,
-    fontWeight: '600',
+    fontWeight: "600",
     color: COLORS.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 5,
   },
   menuButtonDesc: {
     fontSize: 12,
     color: COLORS.primary,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 5,
   },
   chevronContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 10,
   },
   chevronText: {
@@ -461,17 +572,17 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   assistantButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 20,
     right: 20,
-    backgroundColor: '#2ecc71',
+    backgroundColor: "#2ecc71",
     borderRadius: 30,
     width: 60,
     height: 60,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     elevation: 8,
-    shadowColor: '#2ecc71',
+    shadowColor: "#2ecc71",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5,
     shadowRadius: 8,
@@ -479,37 +590,56 @@ const styles = StyleSheet.create({
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   modalContainer: {
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 15,
     padding: 20,
-    width: '85%',
-    maxHeight: '70%',
+    width: "85%",
+    maxHeight: "70%",
   },
   modalHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginBottom: 15,
   },
   modalTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     color: COLORS.primary,
   },
   closeButton: { padding: 5 },
-  modalContent: { alignItems: 'center' },
+  modalContent: { alignItems: "center" },
   modalIcon: { marginBottom: 15 },
-  modalMessage: { fontSize: 16, textAlign: 'center', marginBottom: 15, color: COLORS.primary },
-  modalStationList: { maxHeight: 150, width: '100%', marginBottom: 20 },
-  modalStationItem: { flexDirection: 'row', alignItems: 'center', paddingVertical: 8, paddingHorizontal: 10, backgroundColor: '#f8f9fa', borderRadius: 8, marginBottom: 8 },
+  modalMessage: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 15,
+    color: COLORS.primary,
+  },
+  modalStationList: { maxHeight: 150, width: "100%", marginBottom: 20 },
+  modalStationItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    backgroundColor: "#f8f9fa",
+    borderRadius: 8,
+    marginBottom: 8,
+  },
   modalStationText: { fontSize: 14, marginLeft: 10, color: COLORS.primary },
-  modalActionButton: { backgroundColor: COLORS.primary, paddingVertical: 12, paddingHorizontal: 25, borderRadius: 25, marginTop: 10 },
-  modalActionText: { color: 'white', fontWeight: 'bold', fontSize: 16 },
+  modalActionButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 25,
+    marginTop: 10,
+  },
+  modalActionText: { color: "white", fontWeight: "bold", fontSize: 16 },
 });
 
 export default WelcomeScreen;
