@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS } from '../../constants/colors';
 import i18n from '../../services/i18n';
+import { supabase } from '../../services/supabase'; // 1. Import the Supabase client
 
 const NearestStation = () => {
   const [location, setLocation] = useState(null);
@@ -36,8 +37,6 @@ const NearestStation = () => {
   };
 
   const getCurrentLocation = async () => {
-    // THE FIX IS HERE 👇
-    // Set loading to true to show the spinner during refresh.
     setLoading(true);
     setError(null);
     try {
@@ -54,21 +53,26 @@ const NearestStation = () => {
     }
   };
 
+  // 2. This function now fetches live data from Supabase
   const fetchNearbyStations = async (latitude, longitude) => {
     try {
-      const mockStations = [
-        { id: '1', name: 'Main Water Station', hgi_status: 'Active', latitude: latitude + 0.01, longitude: longitude + 0.01, water_level: -45.5, district: 'Central District' },
-        { id: '2', name: 'North Water Station', hgi_status: 'Maintenance', latitude: latitude - 0.02, longitude: longitude + 0.02, water_level: -33.2, district: 'Northern District' },
-        { id: '3', name: 'South-East Well', hgi_status: 'Active', latitude: latitude - 0.015, longitude: longitude - 0.01, water_level: -51.8, district: 'Southern District' },
-      ];
+      // Call our new database function
+      const { data, error } = await supabase.rpc('find_nearby_stations', {
+        lat: latitude,
+        lon: longitude
+      });
 
-      const stationsWithDistance = mockStations.map(station => ({
+      if (error) throw error;
+
+      // Calculate the distance for each station returned by the database
+      const stationsWithDistance = data.map(station => ({
         ...station,
         distance: calculateDistance(latitude, longitude, station.latitude, station.longitude)
-      })).sort((a, b) => a.distance - b.distance);
+      }));
 
       setStations(stationsWithDistance);
     } catch (err) {
+      console.error("Error fetching nearby stations:", err);
       setError(i18n.t('nearestStation.errorFetch'));
     } finally {
       setLoading(false);
@@ -112,12 +116,12 @@ const NearestStation = () => {
       </View>
 
       {stations.length > 0 ? (
-        stations.slice(0, 3).map((station) => (
+        stations.map((station) => (
           <View key={station.id} style={styles.stationCard}>
             <View style={styles.stationHeader}>
               <Text style={styles.stationName}>{station.name}</Text>
-              <View style={[styles.statusBadge, station.hgi_status === 'Active' ? styles.statusActive : styles.statusMaintenance]}>
-                <Text style={styles.statusText}>{station.hgi_status}</Text>
+              <View style={[styles.statusBadge, {backgroundColor: station.hgi_status === 'Red' ? '#f8d7da' : station.hgi_status === 'Yellow' ? '#fff3cd' : '#d4edda'}]}>
+                <Text style={[styles.statusText, {color: station.hgi_status === 'Red' ? '#721c24' : station.hgi_status === 'Yellow' ? '#856404' : '#155724'}]}>{station.hgi_status}</Text>
               </View>
             </View>
             <Text style={styles.stationInfo}><Ionicons name="navigate" size={14} color={COLORS.gray} /> {station.distance.toFixed(1)} {i18n.t('nearestStation.kmAway')} • {station.district}</Text>
@@ -140,13 +144,11 @@ const styles = StyleSheet.create({
   errorText: { color: COLORS.red, textAlign: 'center', marginTop: 8, fontSize: 14, fontWeight: '500' },
   stationCard: { backgroundColor: '#f8f9fa', padding: 12, borderRadius: 8, marginBottom: 8, borderLeftWidth: 4, borderLeftColor: COLORS.secondary },
   stationHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 },
-  stationName: { fontSize: 18, fontWeight: '600', color: COLORS.primary, flex: 1 },
+  stationName: { fontSize: 18, fontWeight: '600', color: COLORS.primary, flex: 1, marginRight: 8 },
   statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12, marginLeft: 8 },
-  statusActive: { backgroundColor: '#d4edda' },
-  statusMaintenance: { backgroundColor: '#fff3cd' },
   statusText: { fontSize: 12, fontWeight: 'bold' },
   stationInfo: { fontSize: 14, color: COLORS.gray, marginBottom: 6 },
-  button: { backgroundColor: COLORS.primary, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 6, marginTop: 12 },
+  button: { backgroundColor: COLORS.primary, paddingVertical: 10, paddingHorizontal: 20, borderRadius: 6, marginTop: 12, alignSelf: 'center' },
   buttonText: { color: 'white', fontSize: 14, fontWeight: '500' },
 });
 
