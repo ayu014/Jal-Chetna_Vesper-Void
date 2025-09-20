@@ -124,8 +124,8 @@ const LoginScreen = () => {
               { transform: [{ translateY }], opacity },
             ]}
           >
-            <View style={styles.centeredWrapper}>
 
+            <View style={styles.centeredWrapper}>
               <View style={styles.logoPlaceholder}>
                 <Image
                   source={require("../../assets/images/logo.jpg")}
@@ -133,7 +133,6 @@ const LoginScreen = () => {
                   resizeMode="contain"
                 />
               </View>
-
               <Text style={styles.title}>Groundwater Monitoring</Text>
               <Text style={styles.subtitle}>Executive Dashboard - Punjab</Text>
 
