@@ -13,21 +13,35 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to find nearby groundwater stations."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "permissions": [
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "${GOOGLE_MAPS_API_KEY}"
+        }
+      },
+      "package": "com.devrohitkumar.gisdashboard"
     },
     "web": {
       "favicon": "./assets/adaptive-icon.png"
     },
-    "plugins": [
-      "expo-secure-store",
-      "expo-localization"
-    ]
+    "plugins": ["expo-secure-store", "expo-localization", "expo-location"],
+    "extra": {
+      "eas": {
+        "projectId": "bc6c8abe-bbc5-43cf-b663-0cbecce583c8"
+      }
+    }
   }
 }

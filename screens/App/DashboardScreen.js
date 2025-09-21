@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Text,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { MaterialIcons } from "@expo/vector-icons";
@@ -25,26 +26,51 @@ const DashboardScreen = ({ navigation }) => {
   useEffect(() => {
     const fetchStationsFromDb = async () => {
       try {
-        const { data, error } = await supabase
-          .from("live_station_data")
-          .select("*");
+        setIsFetching(true);
+        setError(null);
+
+        // Add timeout for network requests
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Network timeout")), 10000)
+        );
+
+        const fetchPromise = supabase.from("live_station_data").select("*");
+
+        const { data, error } = await Promise.race([
+          fetchPromise,
+          timeoutPromise,
+        ]);
 
         if (error) throw error;
 
+        if (!data || !Array.isArray(data)) {
+          throw new Error("Invalid data received from server");
+        }
+
         const formattedData = data.map((station) => ({
           ...station,
-          waterLevel: station.water_level, // Convert snake_case to camelCase
+          waterLevel: station.water_level || 0, // Convert snake_case to camelCase with fallback
           coordinate: {
-            latitude: station.latitude,
-            longitude: station.longitude,
+            latitude: station.latitude || 31.25,
+            longitude: station.longitude || 75.5,
           },
         }));
 
         setAllStations(formattedData);
         setFilteredStations(formattedData);
       } catch (error) {
-        setError(error.message);
         console.error("Error fetching from DB:", error);
+        setError(error.message || "Failed to load station data");
+
+        // Show user-friendly error
+        Alert.alert(
+          "Connection Error",
+          "Unable to load station data. Please check your internet connection and try again.",
+          [
+            { text: "Retry", onPress: () => fetchStationsFromDb() },
+            { text: "Cancel", style: "cancel" },
+          ]
+        );
       } finally {
         setIsFetching(false);
       }
@@ -115,10 +141,16 @@ const DashboardScreen = ({ navigation }) => {
       <KpiHeader />
       <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
       <View style={styles.mapContainer}>
-        <MapView
-          stationsToDisplay={filteredStations}
-          allStations={allStations}
-        />
+        {filteredStations.length > 0 ? (
+          <MapView
+            stationsToDisplay={filteredStations}
+            allStations={allStations}
+          />
+        ) : (
+          <View style={styles.centered}>
+            <Text>No stations available to display</Text>
+          </View>
+        )}
       </View>
     </SafeAreaView>
   );

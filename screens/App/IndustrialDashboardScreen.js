@@ -1,7 +1,7 @@
 import React from "react";
 import { ScrollView, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import NearestStation from "../../components/farmer/NearestStation"; // Reusing the component from the farmer dashboard
+import NearestStation from "../../components/industrial/NearestStation-id"; // Using the industrial version that doesn't change language
 import WaterTrends from "../../components/industrial/WaterTrends"; // A new component for the graphs
 
 const IndustrialDashboardScreen = () => {
