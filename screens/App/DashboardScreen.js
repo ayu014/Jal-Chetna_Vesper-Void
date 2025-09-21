@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from "react";
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -17,6 +17,7 @@ import SearchBar from "../../components/dashboard/SearchBar";
 import MapView from "../../components/dashboard/MapView";
 
 const DashboardScreen = ({ navigation }) => {
+  const mapRef = useRef(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [allStations, setAllStations] = useState([]);
   const [filteredStations, setFilteredStations] = useState([]);
@@ -93,6 +94,16 @@ const DashboardScreen = ({ navigation }) => {
             station.district.toLowerCase().includes(searchQuery.toLowerCase()))
       );
       setFilteredStations(result);
+
+      // Auto-zoom to first search result if found
+      if (result.length > 0 && mapRef.current) {
+        const firstStation = result[0];
+        if (firstStation.coordinate) {
+          setTimeout(() => {
+            mapRef.current.animateToStation(firstStation);
+          }, 300); // Small delay to ensure map is ready
+        }
+      }
     }
   }, [searchQuery, allStations]);
 
@@ -143,6 +154,7 @@ const DashboardScreen = ({ navigation }) => {
       <View style={styles.mapContainer}>
         {filteredStations.length > 0 ? (
           <MapView
+            ref={mapRef}
             stationsToDisplay={filteredStations}
             allStations={allStations}
           />
