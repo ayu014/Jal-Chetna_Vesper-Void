@@ -43,7 +43,7 @@ const KpiHeader = () => (
     />
     <Card
       title="CRITICAL STATIONS"
-      value="2"
+      value="1"
       subtitle="HGI below 40"
       icon="alert"
       iconColor="#e74c3c"

@@ -21,6 +21,7 @@ const DashboardScreen = ({ navigation }) => {
   const [searchQuery, setSearchQuery] = useState("");
   const [allStations, setAllStations] = useState([]);
   const [filteredStations, setFilteredStations] = useState([]);
+  const [hasSearchResults, setHasSearchResults] = useState(true);
   const [isFetching, setIsFetching] = useState(true);
   const [error, setError] = useState(null);
 
@@ -83,6 +84,7 @@ const DashboardScreen = ({ navigation }) => {
   useEffect(() => {
     if (searchQuery.trim() === "") {
       setFilteredStations(allStations);
+      setHasSearchResults(true);
     } else {
       const result = allStations.filter(
         (station) =>
@@ -93,20 +95,27 @@ const DashboardScreen = ({ navigation }) => {
           (station.district &&
             station.district.toLowerCase().includes(searchQuery.toLowerCase()))
       );
-      setFilteredStations(result);
 
-      // Auto-zoom to first search result if found
-      if (result.length > 0 && mapRef.current) {
-        const firstStation = result[0];
-        if (firstStation.coordinate) {
-          setTimeout(() => {
-            mapRef.current.animateToStation(firstStation);
-          }, 300); // Small delay to ensure map is ready
+      // If no results found, show all stations but mark as no results
+      if (result.length === 0) {
+        setFilteredStations(allStations);
+        setHasSearchResults(false);
+      } else {
+        setFilteredStations(result);
+        setHasSearchResults(true);
+
+        // Auto-zoom to first search result if found
+        if (mapRef.current) {
+          const firstStation = result[0];
+          if (firstStation.coordinate) {
+            setTimeout(() => {
+              mapRef.current.animateToStation(firstStation);
+            }, 300); // Small delay to ensure map is ready
+          }
         }
       }
     }
   }, [searchQuery, allStations]);
-
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "GIS Dashboard",
@@ -151,8 +160,15 @@ const DashboardScreen = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <KpiHeader />
       <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
+      {searchQuery.trim() !== "" && !hasSearchResults && (
+        <View style={styles.noResultsIndicator}>
+          <Text style={styles.noResultsText}>
+            No stations found for "{searchQuery}". Showing all stations.
+          </Text>
+        </View>
+      )}
       <View style={styles.mapContainer}>
-        {filteredStations.length > 0 ? (
+        {allStations.length > 0 ? (
           <MapView
             ref={mapRef}
             stationsToDisplay={filteredStations}
@@ -160,7 +176,7 @@ const DashboardScreen = ({ navigation }) => {
           />
         ) : (
           <View style={styles.centered}>
-            <Text>No stations available to display</Text>
+            <Text>Loading station data...</Text>
           </View>
         )}
       </View>
@@ -171,6 +187,21 @@ const DashboardScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.white },
   centered: { flex: 1, justifyContent: "center", alignItems: "center" },
+  noResultsIndicator: {
+    backgroundColor: "#FFF3CD",
+    borderColor: "#FFEAA7",
+    borderWidth: 1,
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginHorizontal: 12,
+    marginTop: 5,
+  },
+  noResultsText: {
+    color: "#856404",
+    fontSize: 14,
+    textAlign: "center",
+  },
   mapContainer: {
     flex: 1,
     paddingHorizontal: 12,

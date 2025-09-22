@@ -57,6 +57,11 @@ const styles = StyleSheet.create({
     borderColor: "#d1d1d1",
     borderWidth: 1,
     paddingLeft: 10,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   searchIcon: {
     marginRight: 5,
